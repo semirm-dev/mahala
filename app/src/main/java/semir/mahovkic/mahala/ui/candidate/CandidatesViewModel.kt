@@ -22,10 +22,8 @@ class CandidatesViewModel(
 
     init {
         viewModelScope.launch {
-            candidatesRepository.getCandidates().map { it ->
-                it.map {it.toUiState()}
-            }.collect {
-                _state.emit(CandidatesUiState(it))
+            candidatesRepository.getCandidates().collect {
+                _state.value = CandidatesUiState( it.map { candidate -> candidate.toUiState() })
             }
         }
     }
