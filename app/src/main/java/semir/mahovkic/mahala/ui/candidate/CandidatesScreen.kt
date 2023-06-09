@@ -52,28 +52,24 @@ fun CandidatesScreen(
 fun CandidatesList(candidates: List<CandidateUiState>, viewModel: CandidatesViewModel) {
     LazyColumn {
         items(candidates) { candidate ->
-            CandidateCard(candidate, viewModel)
+            CandidateCard(candidate) {
+                viewModel.vote(candidate.id)
+            }
         }
     }
 }
 
 @Composable
-fun CandidateCard(candidate: CandidateUiState, viewModel: CandidatesViewModel) {
+fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()
         .clickable {
-            viewModel.vote(candidateId = candidate.id)
-            viewModel.uiState.value.candidatesUiState
-                .find {
-                    it.id == candidate.id
-                }
-                ?.also {
-                    Log.i(
-                        CANDIDATES_SCREEN_TAG,
-                        "candidate ${candidate.id} - ${candidate.votes} votes"
-                    )
-                }
+            onCandidateClick()
+            Log.i(
+                CANDIDATES_SCREEN_TAG,
+                "candidate ${candidate.id} - ${candidate.votes} votes"
+            )
         }) {
         Image(
             painter = painterResource(R.drawable.semirmahovkic),
