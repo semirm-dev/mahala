@@ -30,37 +30,46 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import semir.mahovkic.mahala.R
+import semir.mahovkic.mahala.data.CandidatesRepository
+import semir.mahovkic.mahala.data.room.CandidatesDao
 
 private const val LOG_TAG = "MainActivity"
 
 @Composable
-fun CandidateScreen(
-    viewModel: CandidateViewModel = CandidateViewModel()
+fun CandidatesScreen(
+    viewModel: CandidatesViewModel = CandidatesViewModel(
+        CandidatesRepository(
+            CandidatesDao()
+        )
+    )
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(candidates = uiState.candidatesUiState)
+    CandidatesList(uiState.candidatesUiState, viewModel)
 }
 
 @Composable
-fun CandidatesList(candidates: List<CandidateUiState>) {
+fun CandidatesList(candidates: List<CandidateUiState>, viewModel: CandidatesViewModel) {
     LazyColumn {
         items(candidates) { candidate ->
-            CandidateCard(candidate = candidate)
+            CandidateCard(candidate) {
+                viewModel.vote(candidate.id)
+            }
         }
     }
 }
 
 @Composable
-fun CandidateCard(candidate: CandidateUiState) {
+fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()
         .clickable {
-            Log.i(LOG_TAG, "clicked on candidate = [${candidate.name}]")
+            Log.i(LOG_TAG, "clicked on candidate = [${candidate.id}]")
+            onCandidateClick()
         }) {
         Image(
-            painter = painterResource(candidate.profileImg),
+            painter = painterResource(R.drawable.semirmahovkic),
             contentDescription = "Candidate profile image",
             modifier = Modifier
                 .size(40.dp)
@@ -101,9 +110,13 @@ fun CandidateCard(candidate: CandidateUiState) {
 @Preview
 @Composable
 fun CandidateCardPreview() {
-    CandidatesList(
-        candidates = listOf(
-            CandidateUiState(1, "candidate-a", R.drawable.semirmahovkic, "pt1")
+    val viewModel = CandidatesViewModel(
+        CandidatesRepository(
+            CandidatesDao()
         )
     )
+
+    val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    CandidatesList(uiState.candidatesUiState, viewModel)
 }
