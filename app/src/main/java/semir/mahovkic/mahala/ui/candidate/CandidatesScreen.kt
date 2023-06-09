@@ -21,8 +21,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +33,7 @@ import semir.mahovkic.mahala.R
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.room.CandidatesDao
 
-private const val LOG_TAG = "MainActivity"
+private const val CANDIDATES_SCREEN_TAG = "CANDIDATES_SCREEN"
 
 @Composable
 fun CandidatesScreen(
@@ -54,21 +52,28 @@ fun CandidatesScreen(
 fun CandidatesList(candidates: List<CandidateUiState>, viewModel: CandidatesViewModel) {
     LazyColumn {
         items(candidates) { candidate ->
-            CandidateCard(candidate) {
-                viewModel.vote(candidate.id)
-            }
+            CandidateCard(candidate, viewModel)
         }
     }
 }
 
 @Composable
-fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
+fun CandidateCard(candidate: CandidateUiState, viewModel: CandidatesViewModel) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()
         .clickable {
-            Log.i(LOG_TAG, "clicked on candidate = ${candidate.id} - ${candidate.votes}")
-            onCandidateClick()
+            viewModel.vote(candidateId = candidate.id)
+            viewModel.uiState.value.candidatesUiState
+                .find {
+                    it.id == candidate.id
+                }
+                ?.also {
+                    Log.i(
+                        CANDIDATES_SCREEN_TAG,
+                        "candidate ${candidate.id} - ${candidate.votes} votes"
+                    )
+                }
         }) {
         Image(
             painter = painterResource(R.drawable.semirmahovkic),

@@ -1,9 +1,7 @@
 package semir.mahovkic.mahala.ui.candidate
 
 import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,6 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import semir.mahovkic.mahala.data.Candidate
 import semir.mahovkic.mahala.data.CandidatesRepository
+
+private const val CANDIDATES_VM_TAG = "CANDIDATES_VM"
 
 class CandidatesViewModel(
     private val candidatesRepository: CandidatesRepository
@@ -23,15 +23,7 @@ class CandidatesViewModel(
     init {
         viewModelScope.launch {
             candidatesRepository.getCandidates().map { it ->
-                it.map {
-                    CandidateUiState(
-                        id = it.id,
-                        name = it.name,
-                        profileImg = it.profileImg,
-                        party = it.party,
-                        votes = it.votes
-                    )
-                }
+                it.map {it.toUiState()}
             }.collect {
                 _state.emit(CandidatesUiState(it))
             }
@@ -39,9 +31,7 @@ class CandidatesViewModel(
     }
 
     fun vote(candidateId: Int) {
-        Log.i("CANDIDATES_VM", "voting for candidate $candidateId")
         candidatesRepository.incrementVote(candidateId)?.let { updatedCandidate ->
-            Log.i("CANDIDATES_VM", "updated candidate votes: ${updatedCandidate.votes}")
             val updated = CandidatesUiState(_state.value.candidatesUiState.also { currentState ->
                 currentState.find { currentCandidate -> currentCandidate.id == updatedCandidate.id }
                     ?.also {
@@ -49,11 +39,7 @@ class CandidatesViewModel(
                     }
             })
 
-            _state.update { updated }
-        }
-
-        uiState.value.candidatesUiState.find { it.id == candidateId }?.also {
-            Log.i("CANDIDATES_VM", "candidate votes: ${it.votes}")
+            _state.value = updated
         }
     }
 }
