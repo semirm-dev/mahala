@@ -21,6 +21,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,7 +67,7 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
         .padding(all = 8.dp)
         .fillMaxWidth()
         .clickable {
-            Log.i(LOG_TAG, "clicked on candidate = [${candidate.id}]")
+            Log.i(LOG_TAG, "clicked on candidate = ${candidate.id} - ${candidate.votes}")
             onCandidateClick()
         }) {
         Image(
@@ -90,7 +92,7 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = candidate.name,
+                    text = "${candidate.name} - ${candidate.votes}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
