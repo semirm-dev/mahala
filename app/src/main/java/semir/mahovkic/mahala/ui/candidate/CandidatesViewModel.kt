@@ -1,17 +1,12 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import semir.mahovkic.mahala.data.Candidate
 import semir.mahovkic.mahala.data.CandidatesRepository
-
-private const val CANDIDATES_VM_TAG = "CANDIDATES_VM"
 
 class CandidatesViewModel(
     private val candidatesRepository: CandidatesRepository
@@ -23,7 +18,7 @@ class CandidatesViewModel(
     init {
         viewModelScope.launch {
             candidatesRepository.getCandidates().collect {
-                _state.value = CandidatesUiState( it.map { candidate -> candidate.toUiState() })
+                _state.value = CandidatesUiState(it.map { candidate -> candidate.toUiState() }, "")
             }
         }
     }
@@ -35,7 +30,7 @@ class CandidatesViewModel(
                     ?.also {
                         it.votes = updatedCandidate.votes
                     }
-            })
+            }, "last candidate ${updatedCandidate.id} - total votes: ${updatedCandidate.votes}")
 
             _state.value = updated
         }
@@ -43,7 +38,8 @@ class CandidatesViewModel(
 }
 
 data class CandidatesUiState(
-    val candidatesUiState: List<CandidateUiState> = listOf()
+    val candidatesUiState: List<CandidateUiState> = listOf(),
+    val message: String = ""
 )
 
 data class CandidateUiState(

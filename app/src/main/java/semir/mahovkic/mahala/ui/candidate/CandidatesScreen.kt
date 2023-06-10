@@ -37,11 +37,7 @@ private const val CANDIDATES_SCREEN_TAG = "CANDIDATES_SCREEN"
 
 @Composable
 fun CandidatesScreen(
-    viewModel: CandidatesViewModel = CandidatesViewModel(
-        CandidatesRepository(
-            CandidatesDao()
-        )
-    )
+    viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -51,7 +47,7 @@ fun CandidatesScreen(
 @Composable
 fun CandidatesList(candidates: List<CandidateUiState>, viewModel: CandidatesViewModel) {
     LazyColumn {
-        items(candidates) { candidate ->
+        items(candidates, key = { it.id }) { candidate ->
             CandidateCard(candidate) {
                 viewModel.vote(candidate.id)
             }
@@ -98,7 +94,6 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
                 )
-
             }
             Spacer(modifier = Modifier.height(5.dp))
             Text(
