@@ -1,6 +1,5 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -62,10 +61,6 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
         .fillMaxWidth()
         .clickable {
             onCandidateClick()
-            Log.i(
-                CANDIDATES_SCREEN_TAG,
-                "candidate ${candidate.id} - ${candidate.votes} votes"
-            )
         }) {
         Image(
             painter = painterResource(R.drawable.semirmahovkic),
