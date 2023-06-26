@@ -8,11 +8,7 @@ class CandidatesRepository @Inject constructor (
     private val votesRemoteDataSource: VotesRemoteDataSource,
     private val localDataStore: VotesLocalDataStore
 ) {
-    suspend fun getCandidatesStream(): Flow<List<Candidate>> {
-        return votesRemoteDataSource.getCandidatesStream()
-    }
+    suspend fun getCandidatesStream(): Flow<List<Candidate>> = votesRemoteDataSource.getCandidatesStream()
 
-    suspend fun incrementVote(candidateId: Int): Candidate? {
-        return votesRemoteDataSource.incrementVote(candidateId)
-    }
+    suspend fun incrementVote(candidateId: Int): Candidate? = votesRemoteDataSource.incrementVote(candidateId)
 }
