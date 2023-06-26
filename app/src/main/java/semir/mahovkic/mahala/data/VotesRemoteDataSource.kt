@@ -4,8 +4,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import semir.mahovkic.mahala.data.model.Candidate
+import javax.inject.Inject
 
-class VotesRemoteDataSource(
+class VotesRemoteDataSource @Inject constructor (
     private val votesApi: VotesApi,
     private val ioDispatcher: CoroutineDispatcher
 ) {

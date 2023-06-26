@@ -1,12 +1,10 @@
 package semir.mahovkic.mahala
 
 import androidx.compose.runtime.Composable
-import semir.mahovkic.mahala.data.CandidatesRepository
-import semir.mahovkic.mahala.data.local.dao.CandidatesDao
+import androidx.lifecycle.viewmodel.compose.viewModel
 import semir.mahovkic.mahala.ui.candidate.CandidatesScreen
-import semir.mahovkic.mahala.ui.candidate.CandidatesViewModel
 
 @Composable
 fun MahalaApp() {
-    CandidatesScreen(viewModel = CandidatesViewModel(CandidatesRepository(CandidatesDao())))
+    CandidatesScreen(viewModel = viewModel())
 }

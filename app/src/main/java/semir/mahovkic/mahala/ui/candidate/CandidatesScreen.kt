@@ -28,12 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import semir.mahovkic.mahala.R
-import semir.mahovkic.mahala.data.CandidatesRepository
-import semir.mahovkic.mahala.data.VotesLocalDataStore
-import semir.mahovkic.mahala.data.VotesRemoteDataSource
-import semir.mahovkic.mahala.data.local.dao.CandidatesDao
-import semir.mahovkic.mahala.data.network.MahalaService
 
 private const val CANDIDATES_SCREEN_TAG = "CANDIDATES_SCREEN"
 
@@ -111,11 +107,7 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
 @Preview
 @Composable
 fun CandidateCardPreview() {
-    val viewModel = CandidatesViewModel(
-        CandidatesRepository(
-            VotesRemoteDataSource(MahalaService(), nil), VotesLocalDataStore(CandidatesDao())
-        )
-    )
+    val viewModel: CandidatesViewModel = viewModel()
 
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 

@@ -2,16 +2,16 @@ package semir.mahovkic.mahala.data.network
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.VotesApi
+import semir.mahovkic.mahala.data.model.Candidate
+import javax.inject.Inject
 
-class MahalaService : VotesApi {
+class MahalaService @Inject constructor() : VotesApi {
+    private val _candidates = mutableListOf<Candidate>()
 
     override fun getCandidatesStream(): Flow<List<Candidate>> {
-        val candidates = mutableListOf<Candidate>()
-
         for (i in 1..50) {
-            candidates.add(
+            _candidates.add(
                 Candidate(
                     id = i,
                     name = "candidate-${i}",
@@ -22,10 +22,12 @@ class MahalaService : VotesApi {
             )
         }
 
-        return MutableStateFlow(candidates)
+        return MutableStateFlow(_candidates)
     }
 
     override fun incrementVote(candidateId: Int): Candidate? {
-        TODO("Not yet implemented")
+        return _candidates.find { it.id == candidateId }?.apply {
+            votes++
+        }
     }
 }
