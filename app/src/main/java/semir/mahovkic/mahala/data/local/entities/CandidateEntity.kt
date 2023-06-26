@@ -1,6 +1,6 @@
-package semir.mahovkic.mahala.data
+package semir.mahovkic.mahala.data.local.entities
 
-data class Candidate(
+class CandidateEntity(
     val id: Int,
     var name: String,
     var profileImg: Int,

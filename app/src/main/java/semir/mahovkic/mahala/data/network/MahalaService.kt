@@ -1,12 +1,15 @@
-package semir.mahovkic.mahala.data.room
+package semir.mahovkic.mahala.data.network
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import semir.mahovkic.mahala.data.Candidate
+import semir.mahovkic.mahala.data.model.Candidate
+import semir.mahovkic.mahala.data.VotesApi
 
-class CandidatesDao {
-    private val candidates = mutableListOf<Candidate>()
-    fun getCandidates(): Flow<List<Candidate>> {
+class MahalaService : VotesApi {
+
+    override fun getCandidatesStream(): Flow<List<Candidate>> {
+        val candidates = mutableListOf<Candidate>()
+
         for (i in 1..50) {
             candidates.add(
                 Candidate(
@@ -22,9 +25,7 @@ class CandidatesDao {
         return MutableStateFlow(candidates)
     }
 
-    fun incrementVote(candidateId: Int): Candidate? {
-        return candidates.find { it.id == candidateId }?.apply {
-            votes++
-        }
+    override fun incrementVote(candidateId: Int): Candidate? {
+        TODO("Not yet implemented")
     }
 }

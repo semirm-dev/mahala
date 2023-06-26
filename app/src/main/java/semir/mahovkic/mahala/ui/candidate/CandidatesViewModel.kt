@@ -3,10 +3,13 @@ package semir.mahovkic.mahala.ui.candidate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import semir.mahovkic.mahala.data.Candidate
 import semir.mahovkic.mahala.data.CandidatesRepository
+import semir.mahovkic.mahala.data.model.Candidate
 
 class CandidatesViewModel(
     private val candidatesRepository: CandidatesRepository
@@ -15,24 +18,43 @@ class CandidatesViewModel(
     private val _state = MutableStateFlow(CandidatesUiState())
     val uiState: StateFlow<CandidatesUiState> = _state
 
+    val candidates = candidatesRepository.getCandidatesStream()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
     init {
         viewModelScope.launch {
-            candidatesRepository.getCandidates().collect {
-                _state.value = CandidatesUiState(it.map { candidate -> candidate.toUiState() }, "")
-            }
+            candidatesRepository.getCandidatesStream()
+                .stateIn(
+                    viewModelScope,
+                    SharingStarted.WhileSubscribed(5000),
+                    emptyList()
+                )
+
+//            candidatesRepository.getCandidatesStream().collect {
+//                _state.value = CandidatesUiState(it.map { candidate -> candidate.toUiState() }, "")
+//            }
         }
     }
 
     fun vote(candidateId: Int) {
-        candidatesRepository.incrementVote(candidateId)?.let { updatedCandidate ->
-            val updated = CandidatesUiState(_state.value.candidatesUiState.also { currentState ->
-                currentState.find { currentCandidate -> currentCandidate.id == updatedCandidate.id }
-                    ?.also {
-                        it.votes = updatedCandidate.votes
-                    }
-            }, "last candidate ${updatedCandidate.id} - total votes: ${updatedCandidate.votes}")
+        viewModelScope.launch {
+            candidatesRepository.incrementVote(candidateId)?.let { updatedCandidate ->
+                val updated = CandidatesUiState(
+                    _state.value.candidatesUiState.also { currentState ->
+                        currentState.find { currentCandidate -> currentCandidate.id == updatedCandidate.id }
+                            ?.also {
+                                it.votes = updatedCandidate.votes
+                            }
+                    },
+                    "last candidate ${updatedCandidate.id} - total votes: ${updatedCandidate.votes}"
+                )
 
-            _state.value = updated
+                _state.value = updated
+            }
         }
     }
 }
