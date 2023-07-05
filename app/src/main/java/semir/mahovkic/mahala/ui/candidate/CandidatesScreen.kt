@@ -28,28 +28,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import semir.mahovkic.mahala.R
+import java.util.UUID
 
 @Composable
 fun CandidatesScreen(
     viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val detailsUiState: CandidateDetailsUiState by viewModel.detailsUiState.collectAsStateWithLifecycle()
 
-    val voterId = "voter-1"
-
-    CandidatesList(uiState.candidatesUiState, onCandidateClick = { candidateId ->
+    CandidatesList(uiState.candidatesUiState, detailsUiState.votes) { candidateId ->
+        val voterId = UUID.randomUUID().toString()
         viewModel.vote(candidateId, voterId)
-    })
+    }
 }
 
 @Composable
 fun CandidatesList(
     candidates: List<CandidateUiState>,
+    candidateVotes: List<CandidateVoteUiState>,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
     LazyColumn {
         items(candidates, key = { it.id }) { candidate ->
-            CandidateCard(candidate) {
+            CandidateCard(candidate, candidateVotes) {
                 onCandidateClick(candidate.id)
             }
         }
@@ -57,7 +59,7 @@ fun CandidatesList(
 }
 
 @Composable
-fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
+fun CandidateCard(candidate: CandidateUiState, votes: List<CandidateVoteUiState>, onCandidateClick: () -> Unit) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()
@@ -86,7 +88,7 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidate.name} - ${candidate.votes}",
+                    text = "${candidate.name} - ${votes.size}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
@@ -95,7 +97,7 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "Party - ${candidate.party}",
-                color = Color.Red,
+                color = Color.Blue,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }

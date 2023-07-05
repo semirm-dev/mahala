@@ -7,11 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.Candidate
+import semir.mahovkic.mahala.data.model.CandidateVote
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +20,10 @@ class CandidatesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidatesUiState())
-    val uiState: StateFlow<CandidatesUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<CandidatesUiState> = _uiState
+
+    private val _detailsUiState = MutableStateFlow((CandidateDetailsUiState()))
+    val detailsUiState: StateFlow<CandidateDetailsUiState> = _detailsUiState
 
     init {
         loadCandidates()
@@ -32,7 +35,7 @@ class CandidatesViewModel @Inject constructor(
 
             candidatesDeferred.await().collect {
                 _uiState.value =
-                    CandidatesUiState(it.map { candidate -> candidate.toUiState() }, "")
+                    CandidatesUiState(it.map { candidate -> candidate.toUiState() })
             }
         }
     }
@@ -41,9 +44,12 @@ class CandidatesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 candidatesRepository.vote(candidateId, voterId)
-                loadCandidates()
-            }
-            catch (e: HttpException) {
+                candidatesRepository.getCandidateDetails(candidateId)?.also {
+                    _detailsUiState.value =
+                        CandidateDetailsUiState(it.votes.map { v -> v.toUiState() })
+                }
+
+            } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
             }
         }
@@ -51,8 +57,7 @@ class CandidatesViewModel @Inject constructor(
 }
 
 data class CandidatesUiState(
-    val candidatesUiState: List<CandidateUiState> = listOf(),
-    val message: String = ""
+    val candidatesUiState: List<CandidateUiState> = listOf()
 )
 
 data class CandidateUiState(
@@ -60,7 +65,6 @@ data class CandidateUiState(
     val name: String,
     val profileImg: Int = 0,
     val party: String = "",
-    var votes: Int = 0
 )
 
 fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
@@ -68,5 +72,18 @@ fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
     name = name,
     profileImg = profileImg,
     party = party,
-    votes = votes
+)
+
+data class CandidateDetailsUiState(
+    var votes: List<CandidateVoteUiState> = listOf()
+)
+
+data class CandidateVoteUiState(
+    val candidateId: String,
+    val voterId: String
+)
+
+fun CandidateVote.toUiState(): CandidateVoteUiState = CandidateVoteUiState(
+    candidateId = candidateId,
+    voterId = voterId
 )
