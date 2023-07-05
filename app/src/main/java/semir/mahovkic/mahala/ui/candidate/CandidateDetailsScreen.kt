@@ -1,6 +1,5 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,35 +26,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import semir.mahovkic.mahala.R
+import java.util.UUID
 
 @Composable
-fun CandidatesScreen(
-    viewModel: CandidatesViewModel
+fun CandidateDetailsScreen(
+    viewModel: CandidateDetailsViewModel
 ) {
-    val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(uiState.candidatesUiState) { candidateId ->
-        Log.i("CANDIDATES_LIST", "navigate to candidate details screen: $candidateId")
+    CandidateDetails(candidate = uiState) {
+        val voterId = UUID.randomUUID().toString()
+        viewModel.vote(uiState.id, voterId)
     }
 }
 
-@Composable
-fun CandidatesList(
-    candidates: List<CandidateUiState>,
-    onCandidateClick: (candidateId: String) -> Unit
-) {
-    LazyColumn {
-        items(candidates, key = { it.id }) { candidate ->
-            CandidateCard(candidate) {
-                onCandidateClick(candidate.id)
-            }
-        }
-    }
-}
 
 @Composable
-fun CandidateCard(
-    candidate: CandidateUiState,
+fun CandidateDetails(
+    candidate: CandidateDetailsUiState,
     onCandidateClick: () -> Unit
 ) {
     Row(modifier = Modifier
@@ -88,7 +74,7 @@ fun CandidateCard(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = candidate.name,
+                    text = "${candidate.name} - ${candidate.votes}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)

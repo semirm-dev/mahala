@@ -1,6 +1,5 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,10 +7,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.Candidate
-import semir.mahovkic.mahala.data.model.CandidateVote
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,10 +18,6 @@ class CandidatesViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(CandidatesUiState())
     val uiState: StateFlow<CandidatesUiState> = _uiState
-
-    // for details screen
-    private val _detailsUiState = MutableStateFlow((CandidateDetailsUiState()))
-    val detailsUiState: StateFlow<CandidateDetailsUiState> = _detailsUiState
 
     init {
         loadCandidates()
@@ -40,34 +33,6 @@ class CandidatesViewModel @Inject constructor(
             }
         }
     }
-
-    fun vote(candidateId: String, voterId: String) {
-        viewModelScope.launch {
-            try {
-                candidatesRepository.vote(candidateId, voterId)
-
-                // for details screen
-                candidatesRepository.getCandidateDetails(candidateId).also {
-                    _detailsUiState.value =
-                        CandidateDetailsUiState(it.votes.map { v -> v.toUiState() })
-                }
-                candidatesRepository.updateVotes(candidateId, _detailsUiState.value.votes.size)
-
-                val updated = CandidatesUiState(
-                    _uiState.value.candidatesUiState.also { currentState ->
-                        currentState.find { currentCandidate -> currentCandidate.id == candidateId }
-                            ?.also {
-                                it.votes = _detailsUiState.value.votes.size
-                            }
-                    }
-                )
-
-                _uiState.value = updated
-            } catch (e: HttpException) {
-                Log.e("VOTE", "vote failed: ${e.response()?.message()}")
-            }
-        }
-    }
 }
 
 data class CandidatesUiState(
@@ -78,8 +43,7 @@ data class CandidateUiState(
     val id: String,
     val name: String,
     val profileImg: Int = 0,
-    val party: String = "",
-    var votes: Int = 0
+    val party: String = ""
 )
 
 fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
@@ -87,20 +51,4 @@ fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
     name = name,
     profileImg = profileImg,
     party = party,
-    votes = votes
-)
-
-// for details screen
-data class CandidateDetailsUiState(
-    var votes: List<CandidateVoteUiState> = listOf()
-)
-
-data class CandidateVoteUiState(
-    val candidateId: String,
-    val voterId: String
-)
-
-fun CandidateVote.toUiState(): CandidateVoteUiState = CandidateVoteUiState(
-    candidateId = candidateId,
-    voterId = voterId
 )
