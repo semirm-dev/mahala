@@ -22,6 +22,7 @@ class CandidatesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(CandidatesUiState())
     val uiState: StateFlow<CandidatesUiState> = _uiState
 
+    // for details screen
     private val _detailsUiState = MutableStateFlow((CandidateDetailsUiState()))
     val detailsUiState: StateFlow<CandidateDetailsUiState> = _detailsUiState
 
@@ -44,11 +45,24 @@ class CandidatesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 candidatesRepository.vote(candidateId, voterId)
-                candidatesRepository.getCandidateDetails(candidateId)?.also {
+
+                // for details screen
+                candidatesRepository.getCandidateDetails(candidateId).also {
                     _detailsUiState.value =
                         CandidateDetailsUiState(it.votes.map { v -> v.toUiState() })
                 }
+                candidatesRepository.updateVotes(candidateId, _detailsUiState.value.votes.size)
 
+                val updated = CandidatesUiState(
+                    _uiState.value.candidatesUiState.also { currentState ->
+                        currentState.find { currentCandidate -> currentCandidate.id == candidateId }
+                            ?.also {
+                                it.votes = _detailsUiState.value.votes.size
+                            }
+                    }
+                )
+
+                _uiState.value = updated
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
             }
@@ -65,6 +79,7 @@ data class CandidateUiState(
     val name: String,
     val profileImg: Int = 0,
     val party: String = "",
+    var votes: Int = 0
 )
 
 fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
@@ -72,8 +87,10 @@ fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
     name = name,
     profileImg = profileImg,
     party = party,
+    votes = votes
 )
 
+// for details screen
 data class CandidateDetailsUiState(
     var votes: List<CandidateVoteUiState> = listOf()
 )

@@ -35,6 +35,8 @@ fun CandidatesScreen(
     viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // for details screen
     val detailsUiState: CandidateDetailsUiState by viewModel.detailsUiState.collectAsStateWithLifecycle()
 
     CandidatesList(uiState.candidatesUiState, detailsUiState.votes) { candidateId ->
@@ -59,7 +61,11 @@ fun CandidatesList(
 }
 
 @Composable
-fun CandidateCard(candidate: CandidateUiState, votes: List<CandidateVoteUiState>, onCandidateClick: () -> Unit) {
+fun CandidateCard(
+    candidate: CandidateUiState,
+    votes: List<CandidateVoteUiState>,
+    onCandidateClick: () -> Unit
+) {
     Row(modifier = Modifier
         .padding(all = 8.dp)
         .fillMaxWidth()
@@ -88,7 +94,7 @@ fun CandidateCard(candidate: CandidateUiState, votes: List<CandidateVoteUiState>
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidate.name} - ${votes.size}",
+                    text = "${candidate.name} - ${candidate.votes} - ${votes.size}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)

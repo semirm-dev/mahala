@@ -16,4 +16,7 @@ class CandidatesRepository @Inject constructor(
 
     suspend fun vote(candidateId: String, voterId: String) =
         votesRemoteDataSource.vote(candidateId, voterId)
+
+    suspend fun updateVotes(candidateId: String, votes: Int) =
+        votesRemoteDataSource.updateVotes(candidateId, votes)
 }
