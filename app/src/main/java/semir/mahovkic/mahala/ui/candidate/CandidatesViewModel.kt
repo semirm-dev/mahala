@@ -1,15 +1,15 @@
 package semir.mahovkic.mahala.ui.candidate
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.Candidate
 import javax.inject.Inject
@@ -37,20 +37,14 @@ class CandidatesViewModel @Inject constructor(
         }
     }
 
-    fun vote(candidateId: String) {
+    fun vote(candidateId: String, voterId: String) {
         viewModelScope.launch {
-            candidatesRepository.incrementVote(candidateId)?.let { updatedCandidate ->
-                val updated = CandidatesUiState(
-                    _uiState.value.candidatesUiState.also { currentState ->
-                        currentState.find { currentCandidate -> currentCandidate.id == updatedCandidate.id }
-                            ?.also {
-                                it.votes = updatedCandidate.votes
-                            }
-                    },
-                    "last candidate ${updatedCandidate.id} - total votes: ${updatedCandidate.votes}"
-                )
-
-                _uiState.value = updated
+            try {
+                candidatesRepository.vote(candidateId, voterId)
+                loadCandidates()
+            }
+            catch (e: HttpException) {
+                Log.e("VOTE", "vote failed: ${e.response()?.message()}")
             }
         }
     }
@@ -64,9 +58,9 @@ data class CandidatesUiState(
 data class CandidateUiState(
     val id: String,
     val name: String,
-    val profileImg: Int,
-    val party: String,
-    var votes: Int
+    val profileImg: Int = 0,
+    val party: String = "",
+    var votes: Int = 0
 )
 
 fun Candidate.toUiState(): CandidateUiState = CandidateUiState(

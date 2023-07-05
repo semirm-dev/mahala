@@ -25,13 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import semir.mahovkic.mahala.R
-
-private const val CANDIDATES_SCREEN_TAG = "CANDIDATES_SCREEN"
 
 @Composable
 fun CandidatesScreen(
@@ -39,8 +35,10 @@ fun CandidatesScreen(
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val voterId = "voter-1"
+
     CandidatesList(uiState.candidatesUiState, onCandidateClick = { candidateId ->
-        viewModel.vote(candidateId)
+        viewModel.vote(candidateId, voterId)
     })
 }
 

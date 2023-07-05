@@ -10,6 +10,6 @@ class CandidatesRepository @Inject constructor(
     suspend fun getCandidatesStream(): Flow<List<Candidate>> =
         votesRemoteDataSource.getCandidatesStream()
 
-    suspend fun incrementVote(candidateId: String): Candidate? =
-        votesRemoteDataSource.incrementVote(candidateId)
+    suspend fun vote(candidateId: String, voterId: String) =
+        votesRemoteDataSource.vote(candidateId, voterId)
 }
