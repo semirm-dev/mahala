@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +37,7 @@ class CandidatesViewModel @Inject constructor(
         }
     }
 
-    fun vote(candidateId: Int) {
+    fun vote(candidateId: String) {
         viewModelScope.launch {
             candidatesRepository.incrementVote(candidateId)?.let { updatedCandidate ->
                 val updated = CandidatesUiState(
@@ -61,7 +62,7 @@ data class CandidatesUiState(
 )
 
 data class CandidateUiState(
-    val id: Int,
+    val id: String,
     val name: String,
     val profileImg: Int,
     val party: String,

@@ -47,7 +47,7 @@ fun CandidatesScreen(
 @Composable
 fun CandidatesList(
     candidates: List<CandidateUiState>,
-    onCandidateClick: (candidateId: Int) -> Unit
+    onCandidateClick: (candidateId: String) -> Unit
 ) {
     LazyColumn {
         items(candidates, key = { it.id }) { candidate ->
@@ -102,16 +102,4 @@ fun CandidateCard(candidate: CandidateUiState, onCandidateClick: () -> Unit) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun CandidateCardPreview() {
-    val viewModel: CandidatesViewModel = viewModel()
-
-    val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    CandidatesList(uiState.candidatesUiState, onCandidateClick = { candidateId ->
-        viewModel.vote(candidateId)
-    })
 }

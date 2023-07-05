@@ -1,7 +1,7 @@
 package semir.mahovkic.mahala.data.local.entities
 
 class CandidateEntity(
-    val id: Int,
+    val id: String,
     var name: String,
     var profileImg: Int,
     var party: String,

@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import semir.mahovkic.mahala.data.model.Candidate
 import javax.inject.Inject
 
-class VotesRemoteDataSource @Inject constructor (
+class VotesRemoteDataSource @Inject constructor(
     private val votesApi: VotesApi,
     private val ioDispatcher: CoroutineDispatcher
 ) {
@@ -15,13 +15,13 @@ class VotesRemoteDataSource @Inject constructor (
             votesApi.getCandidatesStream()
         }
 
-    suspend fun incrementVote(candidateId: Int): Candidate? =
+    suspend fun incrementVote(candidateId: String): Candidate? =
         withContext(ioDispatcher) {
             votesApi.incrementVote(candidateId)
         }
 }
 
 interface VotesApi {
-    fun getCandidatesStream(): Flow<List<Candidate>>
-    fun incrementVote(candidateId: Int): Candidate?
+    suspend fun getCandidatesStream(): Flow<List<Candidate>>
+    suspend fun incrementVote(candidateId: String): Candidate?
 }

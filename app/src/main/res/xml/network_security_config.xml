@@ -1,0 +1,11 @@
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Add additional trust anchors here if needed -->
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">http://a12e-37-203-97-187.ngrok-free.app</domain>
+    </domain-config>
+</network-security-config>

@@ -17,5 +17,5 @@ class MahalaModule {
     fun providesVotesApi(): VotesApi = MahalaService()
 
     @Provides
-    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.Default
+    fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

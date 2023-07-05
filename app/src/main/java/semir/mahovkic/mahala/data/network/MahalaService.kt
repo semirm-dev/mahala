@@ -8,24 +8,19 @@ import javax.inject.Inject
 
 class MahalaService @Inject constructor() : VotesApi {
     private val _candidates = mutableListOf<Candidate>()
+    private val _api = getClient().create(MahalaApi::class.java)
 
-    override fun getCandidatesStream(): Flow<List<Candidate>> {
-        for (i in 1..50) {
-            _candidates.add(
-                Candidate(
-                    id = i,
-                    name = "candidate-${i}",
-                    profileImg = i,
-                    party = if (i > 25) "party-a" else "party-b",
-                    votes = 0
-                )
-            )
+    override suspend fun getCandidatesStream(): Flow<List<Candidate>> {
+        val resp = _api.getCandidates().map { response ->
+            Candidate(response.id, response.name, 0, "", 0)
         }
+
+        _candidates.addAll(resp)
 
         return MutableStateFlow(_candidates)
     }
 
-    override fun incrementVote(candidateId: Int): Candidate? {
+    override suspend fun incrementVote(candidateId: String): Candidate? {
         return _candidates.find { it.id == candidateId }?.apply {
             votes++
         }

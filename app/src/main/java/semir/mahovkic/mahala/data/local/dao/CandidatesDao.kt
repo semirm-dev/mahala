@@ -12,7 +12,7 @@ class CandidatesDao @Inject constructor() {
         TODO("not implemented")
     }
 
-    fun incrementVote(candidateId: Int): CandidateEntity? {
+    fun incrementVote(candidateId: String): CandidateEntity? {
         TODO("not implemented")
     }
 }
