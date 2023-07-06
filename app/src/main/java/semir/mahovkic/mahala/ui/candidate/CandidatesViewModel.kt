@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.Candidate
@@ -17,7 +18,7 @@ class CandidatesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidatesUiState())
-    val uiState: StateFlow<CandidatesUiState> = _uiState
+    val uiState = _uiState.asStateFlow()
 
     init {
         loadCandidates()

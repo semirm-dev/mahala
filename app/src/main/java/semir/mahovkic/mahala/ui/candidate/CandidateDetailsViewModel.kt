@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
@@ -21,7 +22,7 @@ class CandidateDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidateDetailsUiState())
-    val uiState: StateFlow<CandidateDetailsUiState> = _uiState
+    val uiState = _uiState.asStateFlow()
 
     init {
         loadCandidateDetails("candidate-id")
