@@ -41,7 +41,6 @@ fun CandidatesScreen(
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CandidatesList(uiState.candidates) { candidate ->
-        Log.i("CANDIDATES_LIST", "navigate to candidate details screen: ${candidate.id}")
         viewModel.loadCandidateDetails(candidate)
         navController.navigate(Screens.CandidateDetails.route)
     }

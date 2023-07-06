@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.Candidate
-import semir.mahovkic.mahala.data.model.CandidateDetails
 import semir.mahovkic.mahala.data.model.CandidateVote
 import javax.inject.Inject
 
@@ -40,7 +39,7 @@ class CandidatesViewModel @Inject constructor(
                             name = candidate.name,
                             profileImg = candidate.profileImg,
                             party = candidate.party,
-                            votes = it.votes.map { v -> v.toUiState() }
+                            votes = it.votes.map { v -> v.toCandidateVoteUiState() }
                         )
                     )
                 }
@@ -53,13 +52,8 @@ class CandidatesViewModel @Inject constructor(
     fun vote(candidateDetails: CandidateDetailsUiState, voterId: String) {
         viewModelScope.launch {
             try {
-                Log.i("VOTE", "voting for $candidateDetails.id ")
                 candidatesRepository.vote(candidateDetails.id, voterId)
-                loadCandidateDetails(candidateDetails.toUiState())
-                Log.i(
-                    "VOTE",
-                    "new votes for candidate $candidateDetails.id  : ${_uiState.value.candidateDetails.votes.size}"
-                )
+                loadCandidateDetails(candidateDetails.toCandidateUiState())
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
             }
@@ -73,7 +67,7 @@ class CandidatesViewModel @Inject constructor(
 
                 candidatesDeferred.await().collect {
                     _uiState.value =
-                        CandidatesUiState(it.map { candidate -> candidate.toUiState() })
+                        CandidatesUiState(it.map { candidate -> candidate.toCandidateUiState() })
                 }
             } catch (e: HttpException) {
                 Log.e("VOTE", "loadCandidates failed: ${e.response()?.message()}")
@@ -94,14 +88,6 @@ data class CandidateUiState(
     val party: String = ""
 )
 
-fun Candidate.toUiState(): CandidateUiState = CandidateUiState(
-    id = id,
-    name = name,
-    profileImg = profileImg,
-    party = party,
-)
-
-
 data class CandidateDetailsUiState(
     val id: String = "",
     val name: String = "",
@@ -115,14 +101,21 @@ data class CandidateVoteUiState(
     val voterId: String
 )
 
-fun CandidateDetailsUiState.toUiState(): CandidateUiState = CandidateUiState(
+fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
     id = id,
     name = name,
     profileImg = profileImg,
     party = party,
 )
 
-fun CandidateVote.toUiState(): CandidateVoteUiState = CandidateVoteUiState(
+fun CandidateDetailsUiState.toCandidateUiState(): CandidateUiState = CandidateUiState(
+    id = id,
+    name = name,
+    profileImg = profileImg,
+    party = party,
+)
+
+fun CandidateVote.toCandidateVoteUiState(): CandidateVoteUiState = CandidateVoteUiState(
     candidateId = candidateId,
     voterId = voterId
 )
