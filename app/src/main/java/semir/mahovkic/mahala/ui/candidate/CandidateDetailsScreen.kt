@@ -36,15 +36,15 @@ fun CandidateDetailsScreen(
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidateDetails(candidate = uiState.candidateDetails) {
+    CandidateDetails(candidateDetails = uiState.candidateDetails) {
         val voterId = UUID.randomUUID().toString()
-        viewModel.vote(uiState.candidateDetails.id, voterId)
+        viewModel.vote(uiState.candidateDetails, voterId)
     }
 }
 
 @Composable
 fun CandidateDetails(
-    candidate: CandidateDetailsUiState,
+    candidateDetails: CandidateDetailsUiState,
     onCandidateClick: () -> Unit
 ) {
     Row(modifier = Modifier
@@ -75,7 +75,7 @@ fun CandidateDetails(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidate.name} - ${candidate.votes.size}",
+                    text = "${candidateDetails.name} - ${candidateDetails.votes.size}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
@@ -83,7 +83,7 @@ fun CandidateDetails(
             }
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "Party - ${candidate.party}",
+                text = "Party - ${candidateDetails.party}",
                 color = Color.Blue,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
+import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.ui.Screens
 
 @Composable
@@ -39,9 +40,9 @@ fun CandidatesScreen(
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(uiState.candidates) { candidateId ->
-        Log.i("CANDIDATES_LIST", "navigate to candidate details screen: $candidateId")
-        viewModel.loadCandidateDetails(candidateId)
+    CandidatesList(uiState.candidates) { candidate ->
+        Log.i("CANDIDATES_LIST", "navigate to candidate details screen: ${candidate.id}")
+        viewModel.loadCandidateDetails(candidate)
         navController.navigate(Screens.CandidateDetails.route)
     }
 }
@@ -49,12 +50,12 @@ fun CandidatesScreen(
 @Composable
 fun CandidatesList(
     candidates: List<CandidateUiState>,
-    onCandidateClick: (candidateId: String) -> Unit
+    onCandidateClick: (candidate: CandidateUiState) -> Unit
 ) {
     LazyColumn {
         items(candidates, key = { it.id }) { candidate ->
             CandidateCard(candidate) {
-                onCandidateClick(candidate.id)
+                onCandidateClick(candidate)
             }
         }
     }

@@ -27,35 +27,56 @@ class CandidatesViewModel @Inject constructor(
         loadCandidates()
     }
 
-    private fun loadCandidates() {
-        viewModelScope.launch {
-            val candidatesDeferred = async { candidatesRepository.getCandidatesStream() }
-
-            candidatesDeferred.await().collect {
-                _uiState.value =
-                    CandidatesUiState(it.map { candidate -> candidate.toUiState() })
-            }
-        }
-    }
-
-    fun loadCandidateDetails(candidateId: String) {
-        viewModelScope.launch {
-            val candidateDetailsDeferred =
-                async { candidatesRepository.getCandidateDetails(candidateId) }
-
-            candidateDetailsDeferred.await().also {
-                _uiState.value = CandidatesUiState(_uiState.value.candidates, it.toUiState())
-            }
-        }
-    }
-
-    fun vote(candidateId: String, voterId: String) {
+    fun loadCandidateDetails(candidate: CandidateUiState) {
         viewModelScope.launch {
             try {
-                candidatesRepository.vote(candidateId, voterId)
-                loadCandidateDetails(candidateId)
+                val candidateDetailsDeferred =
+                    async { candidatesRepository.getCandidateDetails(candidate.id) }
+
+                candidateDetailsDeferred.await().also {
+                    _uiState.value = CandidatesUiState(
+                        _uiState.value.candidates, CandidateDetailsUiState(
+                            id = candidate.id,
+                            name = candidate.name,
+                            profileImg = candidate.profileImg,
+                            party = candidate.party,
+                            votes = it.votes.map { v -> v.toUiState() }
+                        )
+                    )
+                }
+            } catch (e: HttpException) {
+                Log.e("VOTE", "loadCandidateDetails failed: ${e.response()?.message()}")
+            }
+        }
+    }
+
+    fun vote(candidateDetails: CandidateDetailsUiState, voterId: String) {
+        viewModelScope.launch {
+            try {
+                Log.i("VOTE", "voting for $candidateDetails.id ")
+                candidatesRepository.vote(candidateDetails.id, voterId)
+                loadCandidateDetails(candidateDetails.toUiState())
+                Log.i(
+                    "VOTE",
+                    "new votes for candidate $candidateDetails.id  : ${_uiState.value.candidateDetails.votes.size}"
+                )
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
+            }
+        }
+    }
+
+    private fun loadCandidates() {
+        viewModelScope.launch {
+            try {
+                val candidatesDeferred = async { candidatesRepository.getCandidatesStream() }
+
+                candidatesDeferred.await().collect {
+                    _uiState.value =
+                        CandidatesUiState(it.map { candidate -> candidate.toUiState() })
+                }
+            } catch (e: HttpException) {
+                Log.e("VOTE", "loadCandidates failed: ${e.response()?.message()}")
             }
         }
     }
@@ -94,12 +115,11 @@ data class CandidateVoteUiState(
     val voterId: String
 )
 
-fun CandidateDetails.toUiState(): CandidateDetailsUiState = CandidateDetailsUiState(
+fun CandidateDetailsUiState.toUiState(): CandidateUiState = CandidateUiState(
     id = id,
     name = name,
     profileImg = profileImg,
     party = party,
-    votes = votes.map { it.toUiState() }
 )
 
 fun CandidateVote.toUiState(): CandidateVoteUiState = CandidateVoteUiState(

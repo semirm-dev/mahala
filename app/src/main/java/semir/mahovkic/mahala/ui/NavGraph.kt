@@ -1,6 +1,7 @@
 package semir.mahovkic.mahala.ui
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -10,7 +11,7 @@ import semir.mahovkic.mahala.ui.candidate.CandidatesViewModel
 
 @Composable
 fun NavGraph(
-    viewModel: CandidatesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    candidatesViewModel: CandidatesViewModel = viewModel()
 ) {
     val navController = rememberNavController()
 
@@ -19,10 +20,10 @@ fun NavGraph(
         startDestination = Screens.Candidates.route
     ) {
         composable(Screens.Candidates.route) {
-            CandidatesScreen(navController, viewModel)
+            CandidatesScreen(navController, candidatesViewModel)
         }
         composable(Screens.CandidateDetails.route) {
-            CandidateDetailsScreen(navController, viewModel)
+            CandidateDetailsScreen(navController, candidatesViewModel)
         }
     }
 }
