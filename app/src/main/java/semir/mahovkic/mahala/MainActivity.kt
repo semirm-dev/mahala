@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
+import semir.mahovkic.mahala.ui.NavGraph
 import semir.mahovkic.mahala.ui.theme.MahalaTheme
 
 @AndroidEntryPoint
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    MahalaApp()
+                    NavGraph()
                 }
             }
         }

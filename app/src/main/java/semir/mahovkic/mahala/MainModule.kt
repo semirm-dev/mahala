@@ -11,7 +11,7 @@ import semir.mahovkic.mahala.data.network.MahalaService
 
 @Module
 @InstallIn(SingletonComponent::class)
-class MahalaModule {
+class MainModule {
 
     @Provides
     fun providesVotesApi(): VotesApi = MahalaService()
