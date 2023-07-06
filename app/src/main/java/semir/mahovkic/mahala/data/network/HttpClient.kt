@@ -1,6 +1,5 @@
 package semir.mahovkic.mahala.data.network
 
-import androidx.core.os.BuildCompat
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import semir.mahovkic.mahala.BuildConfig
