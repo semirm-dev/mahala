@@ -28,16 +28,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
+import semir.mahovkic.mahala.ui.Screens
 
 @Composable
 fun CandidatesScreen(
+    navController: NavController,
     viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(uiState.candidatesUiState) { candidateId ->
+    CandidatesList(uiState.candidates) { candidateId ->
         Log.i("CANDIDATES_LIST", "navigate to candidate details screen: $candidateId")
+        viewModel.loadCandidateDetails(candidateId)
+        navController.navigate(Screens.CandidateDetails.route)
     }
 }
 

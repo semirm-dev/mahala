@@ -1,10 +1,10 @@
 package semir.mahovkic.mahala
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
-import semir.mahovkic.mahala.ui.candidate.CandidatesScreen
+import semir.mahovkic.mahala.ui.NavGraph
 
 @Composable
 fun MahalaApp() {
-    CandidatesScreen(viewModel = viewModel())
+//    CandidatesScreen(viewModel = viewModel())
+        NavGraph()
 }

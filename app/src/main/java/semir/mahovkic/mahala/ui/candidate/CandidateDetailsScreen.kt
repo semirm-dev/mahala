@@ -25,21 +25,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
 import java.util.UUID
 
 @Composable
 fun CandidateDetailsScreen(
-    viewModel: CandidateDetailsViewModel
+    navController: NavController,
+    viewModel: CandidatesViewModel
 ) {
-    val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidateDetails(candidate = uiState) {
+    CandidateDetails(candidate = uiState.candidateDetails) {
         val voterId = UUID.randomUUID().toString()
-        viewModel.vote(uiState.id, voterId)
+        viewModel.vote(uiState.candidateDetails.id, voterId)
     }
 }
-
 
 @Composable
 fun CandidateDetails(
@@ -74,7 +75,7 @@ fun CandidateDetails(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidate.name} - ${candidate.votes}",
+                    text = "${candidate.name} - ${candidate.votes.size}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
