@@ -3,9 +3,10 @@ package semir.mahovkic.mahala.data.network
 import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.model.CandidateDetails
+import semir.mahovkic.mahala.data.model.CandidateVote
+import semir.mahovkic.mahala.data.network.model.CandidateDto
+import semir.mahovkic.mahala.data.network.model.CandidateVoteDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
-import semir.mahovkic.mahala.data.network.model.toCandidate
-import semir.mahovkic.mahala.data.network.model.toCandidateVote
 import javax.inject.Inject
 
 class MahalaService @Inject constructor() : VotesApi {
@@ -23,3 +24,15 @@ class MahalaService @Inject constructor() : VotesApi {
     override suspend fun vote(candidateId: String, voterId: String) =
         _api.vote(SendVoteDto(candidateId, voterId))
 }
+
+fun CandidateDto.toCandidate(): Candidate = Candidate(
+    id = id,
+    name = name,
+    profileImg = profileImg ?: 0,
+    party = party ?: "",
+)
+
+fun CandidateVoteDto.toCandidateVote(): CandidateVote = CandidateVote(
+    candidateId = candidateID,
+    voterId = voterID
+)

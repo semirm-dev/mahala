@@ -32,13 +32,6 @@ class VotesRemoteDataSource @Inject constructor(
         withContext(ioDispatcher) {
             votesApi.vote(candidateId, voterId)
         }
-
-    suspend fun updateVotes(candidateId: String, votes: Int) =
-        withContext(ioDispatcher) {
-            _candidates.find { it.id == candidateId }?.also { c ->
-                c.votes = votes
-            }
-        }
 }
 
 interface VotesApi {

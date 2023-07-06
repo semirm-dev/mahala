@@ -9,6 +9,10 @@ android {
     namespace 'semir.mahovkic.mahala'
     compileSdk 33
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId "semir.mahovkic.mahala"
         minSdk 29
@@ -20,6 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField("String", "VOTING_SERVICE_API", "\"http://a12e-37-203-97-187.ngrok-free.app/api/\"");
     }
 
     buildTypes {
