@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
+import semir.mahovkic.mahala.data.model.CandidateVote
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,3 +49,7 @@ class CandidateDetailsViewModel @Inject constructor(
         }
     }
 }
+
+fun CandidateVote.toCandidateVoteUiState(): CandidateVoteUiState = CandidateVoteUiState(
+    voterId = voterId
+)

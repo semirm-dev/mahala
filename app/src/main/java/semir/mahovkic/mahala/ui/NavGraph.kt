@@ -30,7 +30,11 @@ fun NavGraph(
             "${Screens.CandidateDetails.route}/{candidateId}",
             arguments = listOf(navArgument("candidateId") { type = NavType.StringType })
         ) {
-            CandidateDetailsScreen(navController, it.arguments?.getString("candidateId") ?: "", candidateDetailsViewModel)
+            CandidateDetailsScreen(
+                navController,
+                it.arguments?.getString("candidateId") ?: "",
+                candidateDetailsViewModel
+            )
         }
     }
 }

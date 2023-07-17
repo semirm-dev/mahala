@@ -1,7 +1,5 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
-import semir.mahovkic.mahala.data.model.CandidateVote
-
 data class CandidateDetailsUiState(
     val id: String = "",
     val name: String = "",
@@ -12,8 +10,4 @@ data class CandidateDetailsUiState(
 
 data class CandidateVoteUiState(
     val voterId: String
-)
-
-fun CandidateVote.toCandidateVoteUiState(): CandidateVoteUiState = CandidateVoteUiState(
-    voterId = voterId
 )

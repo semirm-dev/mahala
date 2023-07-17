@@ -18,8 +18,7 @@ class MahalaService @Inject constructor() : VotesApi {
     }
 
     override suspend fun getCandidateDetails(candidateId: String): CandidateDetails {
-        val resp = _api.getCandidateDetails(candidateId)
-        return resp.toCandidateDetails()
+        return _api.getCandidateDetails(candidateId).toCandidateDetails()
     }
 
     override suspend fun vote(candidateId: String, voterId: String) =
