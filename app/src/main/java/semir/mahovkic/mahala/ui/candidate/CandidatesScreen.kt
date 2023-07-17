@@ -38,20 +38,20 @@ fun CandidatesScreen(
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(uiState.candidates) { candidate ->
-        navController.navigate("${Screens.CandidateDetails.route}/${candidate.id}")
+    CandidatesList(uiState.candidates) { candidateId ->
+        navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
     }
 }
 
 @Composable
 fun CandidatesList(
     candidates: List<CandidateUiState>,
-    onCandidateClick: (candidate: CandidateUiState) -> Unit
+    onCandidateClick: (candidateId: String) -> Unit
 ) {
     LazyColumn {
         items(candidates, key = { it.id }) { candidate ->
             CandidateCard(candidate) {
-                onCandidateClick(candidate)
+                onCandidateClick(candidate.id)
             }
         }
     }

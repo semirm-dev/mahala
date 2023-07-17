@@ -79,7 +79,7 @@ fun CandidateDetails(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidateDetails.name} - ${candidateDetails.votes?.size}",
+                    text = "${candidateDetails.name} - ${candidateDetails.votes?.size ?: 0}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
