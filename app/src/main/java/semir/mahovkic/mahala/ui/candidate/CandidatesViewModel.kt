@@ -23,37 +23,6 @@ class CandidatesViewModel @Inject constructor(
         loadCandidates()
     }
 
-    fun loadCandidateDetails(candidate: CandidateUiState) {
-        viewModelScope.launch {
-            try {
-                candidatesRepository.getCandidateDetails(candidate.id).also {
-                    _uiState.value = CandidatesUiState(
-                        _uiState.value.candidates, CandidateDetailsUiState(
-                            id = candidate.id,
-                            name = candidate.name,
-                            profileImg = candidate.profileImg,
-                            party = candidate.party,
-                            votes = it.votes.map { v -> v.toCandidateVoteUiState() }
-                        )
-                    )
-                }
-            } catch (e: HttpException) {
-                Log.e("VOTE", "loadCandidateDetails failed: ${e.response()?.message()}")
-            }
-        }
-    }
-
-    fun vote(candidateDetails: CandidateDetailsUiState, voterId: String) {
-        viewModelScope.launch {
-            try {
-                candidatesRepository.vote(candidateDetails.id, voterId)
-                loadCandidateDetails(candidateDetails.toCandidateUiState())
-            } catch (e: HttpException) {
-                Log.e("VOTE", "vote failed: ${e.response()?.message()}")
-            }
-        }
-    }
-
     private fun loadCandidates() {
         viewModelScope.launch {
             try {

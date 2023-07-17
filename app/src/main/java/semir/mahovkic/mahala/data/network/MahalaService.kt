@@ -4,6 +4,7 @@ import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.model.CandidateDetails
 import semir.mahovkic.mahala.data.model.CandidateVote
+import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
 import semir.mahovkic.mahala.data.network.model.CandidateVoteDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
@@ -18,7 +19,7 @@ class MahalaService @Inject constructor() : VotesApi {
 
     override suspend fun getCandidateDetails(candidateId: String): CandidateDetails {
         val resp = _api.getCandidateDetails(candidateId)
-        return CandidateDetails(votes = resp.map { it.toCandidateVote() })
+        return resp.toCandidateDetails()
     }
 
     override suspend fun vote(candidateId: String, voterId: String) =
@@ -28,11 +29,18 @@ class MahalaService @Inject constructor() : VotesApi {
 fun CandidateDto.toCandidate(): Candidate = Candidate(
     id = id,
     name = name,
-    profileImg = profileImg ?: 0,
-    party = party ?: "",
+    profileImg = profileImg,
+    party = party,
+)
+
+fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetails(
+    id = id,
+    name = name,
+    profileImg = profileImg,
+    party = party,
+    votes = votes?.map { it.toCandidateVote() }
 )
 
 fun CandidateVoteDto.toCandidateVote(): CandidateVote = CandidateVote(
-    candidateId = candidateID,
-    voterId = voterID
+    voterId = voterID,
 )

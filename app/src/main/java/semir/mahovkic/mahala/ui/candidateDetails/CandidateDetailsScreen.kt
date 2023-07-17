@@ -1,4 +1,4 @@
-package semir.mahovkic.mahala.ui.candidate
+package semir.mahovkic.mahala.ui.candidateDetails
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
 import java.util.UUID
@@ -32,13 +33,16 @@ import java.util.UUID
 @Composable
 fun CandidateDetailsScreen(
     navController: NavController,
-    viewModel: CandidatesViewModel
+    candidateId: String,
+    viewModel: CandidateDetailsViewModel
 ) {
-    val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.loadCandidateDetails(candidateId)
 
-    CandidateDetails(candidateDetails = uiState.candidateDetails) {
+    val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    CandidateDetails(candidateDetails = uiState) {
         val voterId = UUID.randomUUID().toString()
-        viewModel.vote(uiState.candidateDetails, voterId)
+        viewModel.vote(uiState.id, voterId)
     }
 }
 
@@ -75,7 +79,7 @@ fun CandidateDetails(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidateDetails.name} - ${candidateDetails.votes.size}",
+                    text = "${candidateDetails.name} - ${candidateDetails.votes?.size}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)

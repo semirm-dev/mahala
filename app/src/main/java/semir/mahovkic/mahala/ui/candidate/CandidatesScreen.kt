@@ -1,6 +1,5 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
-import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.ui.Screens
 
 @Composable
@@ -41,8 +39,7 @@ fun CandidatesScreen(
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     CandidatesList(uiState.candidates) { candidate ->
-        viewModel.loadCandidateDetails(candidate)
-        navController.navigate(Screens.CandidateDetails.route)
+        navController.navigate("${Screens.CandidateDetails.route}/${candidate.id}")
     }
 }
 
