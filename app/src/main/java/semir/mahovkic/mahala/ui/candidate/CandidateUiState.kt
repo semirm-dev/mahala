@@ -1,6 +1,7 @@
 package semir.mahovkic.mahala.ui.candidate
 
 data class CandidatesUiState(
+    val isRefreshing: Boolean = false,
     val candidates: List<CandidateUiState> = listOf(),
 )
 

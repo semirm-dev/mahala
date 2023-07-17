@@ -24,12 +24,14 @@ class CandidatesViewModel @Inject constructor(
         loadCandidates()
     }
 
-    private fun loadCandidates() {
+    fun loadCandidates() {
         viewModelScope.launch {
             try {
                 candidatesRepository.getCandidatesStream().collect {
                     _uiState.value =
-                        CandidatesUiState(it.map { candidate -> candidate.toCandidateUiState() })
+                        CandidatesUiState(
+                            false,
+                            it.map { candidate -> candidate.toCandidateUiState() })
                 }
             } catch (e: HttpException) {
                 Log.e("VOTE", "loadCandidates failed: ${e.response()?.message()}")

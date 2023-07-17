@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,6 +35,7 @@ import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
 import semir.mahovkic.mahala.ui.Screens
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CandidatesScreen(
     navController: NavController,
@@ -38,8 +43,19 @@ fun CandidatesScreen(
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    CandidatesList(uiState.candidates) { candidateId ->
-        navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
+    val pullRefreshState =
+        rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
+
+    Box(Modifier.pullRefresh(pullRefreshState)) {
+        CandidatesList(uiState.candidates) { candidateId ->
+            navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
+        }
+
+        PullRefreshIndicator(
+            uiState.isRefreshing,
+            pullRefreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 

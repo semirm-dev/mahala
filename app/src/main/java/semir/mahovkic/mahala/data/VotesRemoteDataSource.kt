@@ -18,6 +18,7 @@ class VotesRemoteDataSource @Inject constructor(
     suspend fun getCandidatesStream(): Flow<List<Candidate>> =
         withContext(ioDispatcher) {
             val resp = votesApi.getCandidatesStream()
+            _candidates.clear()
             _candidates.addAll(resp)
             MutableStateFlow(_candidates)
         }
