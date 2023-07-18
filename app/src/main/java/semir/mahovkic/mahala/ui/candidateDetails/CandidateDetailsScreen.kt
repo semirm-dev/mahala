@@ -5,17 +5,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -74,46 +75,64 @@ fun CandidateDetails(
     candidateDetails: CandidateDetailsUiState,
     onCandidateClick: () -> Unit
 ) {
-    Row(modifier = Modifier
-        .padding(all = 8.dp)
-        .fillMaxWidth()
-        .clickable {
-            onCandidateClick()
-        }) {
-        Image(
-            painter = painterResource(R.drawable.semirmahovkic),
-            contentDescription = "Candidate profile image",
+    Column {
+        Row(
             modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+                .padding(all = 8.dp)
+                .fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(R.drawable.semirmahovkic),
+                contentDescription = "Candidate profile image",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            )
 
-        Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterVertically)
+            ) {
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    shadowElevation = 2.dp,
+                    modifier = Modifier.align(Alignment.CenterStart)
+                ) {
+                    Text(
+                        text = "${candidateDetails.name} - total votes: ${candidateDetails.votes?.size ?: 0}",
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.padding(all = 4.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(
+                    text = candidateDetails.party,
+                    color = Color.Blue,
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.CenterVertically)
+                .padding(10.dp)
         ) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
-                shadowElevation = 2.dp,
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Text(
-                    text = "${candidateDetails.name} - total votes: ${candidateDetails.votes?.size ?: 0}",
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(all = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = candidateDetails.party,
-                color = Color.Blue,
                 modifier = Modifier.align(Alignment.CenterEnd)
-            )
+            ) {
+                Button(
+                    onClick = onCandidateClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(text = "Vote", color = Color.White)
+                }
+            }
         }
     }
 }
