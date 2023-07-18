@@ -40,20 +40,20 @@ class CandidateDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if (!validVoter(voterId)) {
-                    _voteUiState.value = VoteDetailsUiState(voterId, "invalid voter id")
+                    setVoteMessage(voterId, "invalid voter id")
                 }
 
                 candidatesRepository.vote(candidateId, voterId)
                 loadCandidateDetails(candidateId)
-                _voteUiState.value = VoteDetailsUiState(voterId = voterId)
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
-                _voteUiState.value = VoteDetailsUiState(
-                    voterId = voterId,
-                    responseMessage = e.response()?.message().toString()
-                )
+                setVoteMessage(voterId, e.response()?.message().toString())
             }
         }
+    }
+
+    fun setVoteMessage(voterId: String = "", message: String = "") {
+        _voteUiState.value = VoteDetailsUiState(voterId, message)
     }
 
     fun resetVoteUiState() {

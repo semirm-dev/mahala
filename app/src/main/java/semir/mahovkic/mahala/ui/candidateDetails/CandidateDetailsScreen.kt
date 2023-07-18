@@ -48,16 +48,25 @@ fun CandidateDetailsScreen(
 
     viewModel.loadCandidateDetails(candidateId)
 
-    VoteResponseMessage(voteUiState) {
+    DisplayVoteMessage(voteUiState) {
         viewModel.resetVoteUiState()
     }
 
     val idScanLauncher =
         rememberLauncherForActivityResult(OneSideDocumentScan()) { scanResult: OneSideScanResult ->
             handleScanResult(scanResult) {
-                scanResult.result?.documentNumber?.value()?.also {
-                    Log.i("SCAN", "voter $it voting for ${uiState.id}")
-                    viewModel.vote(uiState.id, it)
+                scanResult.result?.let { r ->
+                    val voterId = r.documentNumber?.value()?.also {
+                        Log.i("SCAN", "voter $it voting for ${uiState.id}")
+                        viewModel.vote(uiState.id, it)
+                        viewModel.setVoteMessage(it)
+                    }
+
+                    r.isExpired.let {
+                        r.dateOfExpiry?.let {
+                            viewModel.setVoteMessage(voterId.toString(), "id expired: ${it.date}")
+                        }
+                    }
                 }
             }
         }
@@ -139,8 +148,8 @@ fun CandidateDetails(
 }
 
 @Composable
-fun VoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
-    if (voteUiState.voterId.isNotEmpty() && voteUiState.responseMessage.isEmpty()) {
+fun DisplayVoteMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
+    if (voteUiState.voterId.isNotEmpty() && voteUiState.message.isEmpty()) {
         Toast.makeText(
             LocalContext.current,
             "voter ${voteUiState.voterId} finished voting",
@@ -148,8 +157,8 @@ fun VoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
         ).show()
     }
 
-    if (voteUiState.responseMessage.isNotEmpty()) {
-        Toast.makeText(LocalContext.current, voteUiState.responseMessage, Toast.LENGTH_LONG).show()
+    if (voteUiState.message.isNotEmpty()) {
+        Toast.makeText(LocalContext.current, voteUiState.message, Toast.LENGTH_LONG).show()
     }
 
     callback()
