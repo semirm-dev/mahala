@@ -147,7 +147,7 @@ fun CandidateCard(
             }
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "Party - ${candidate.party}",
+                text = candidate.party,
                 color = Color.Blue,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )

@@ -93,7 +93,7 @@ fun CandidateDetails(
 
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .align(Alignment.CenterVertically)
         ) {
             Surface(
@@ -102,15 +102,15 @@ fun CandidateDetails(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = "${candidateDetails.name} - ${candidateDetails.votes?.size ?: 0}",
+                    text = "${candidateDetails.name} - total votes: ${candidateDetails.votes?.size ?: 0}",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(all = 4.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Text(
-                text = "Party - ${candidateDetails.party}",
+                text = candidateDetails.party,
                 color = Color.Blue,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
