@@ -121,7 +121,7 @@ fun CandidateCard(
             painter = painterResource(R.drawable.semirmahovkic),
             contentDescription = "Candidate profile image",
             modifier = Modifier
-                .size(40.dp)
+                .size(100.dp)
                 .clip(CircleShape)
                 .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
         )
@@ -141,7 +141,7 @@ fun CandidateCard(
                 Text(
                     text = candidate.name,
                     color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(all = 4.dp)
                 )
             }
