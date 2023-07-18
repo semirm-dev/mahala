@@ -48,23 +48,17 @@ fun CandidateDetailsScreen(
 
     viewModel.loadCandidateDetails(candidateId)
 
-    ShowVoteResponseMessage(voteUiState) {
+    VoteResponseMessage(voteUiState) {
         viewModel.resetVoteUiState()
     }
 
     val idScanLauncher =
-        rememberLauncherForActivityResult(OneSideDocumentScan()) { oneSideScanResult: OneSideScanResult ->
-            when (oneSideScanResult.resultStatus) {
-                ResultStatus.FINISHED -> {
-                    oneSideScanResult.result?.documentNumber?.value()?.also {
-                        Log.i("SCAN", "voter $it voting for ${uiState.id}")
-                        viewModel.vote(uiState.id, it)
-                    }
+        rememberLauncherForActivityResult(OneSideDocumentScan()) { scanResult: OneSideScanResult ->
+            handleScanResult(scanResult) {
+                scanResult.result?.documentNumber?.value()?.also {
+                    Log.i("SCAN", "voter $it voting for ${uiState.id}")
+                    viewModel.vote(uiState.id, it)
                 }
-
-                ResultStatus.CANCELLED -> {}
-                ResultStatus.EXCEPTION -> {}
-                else -> {}
             }
         }
 
@@ -145,7 +139,7 @@ fun CandidateDetails(
 }
 
 @Composable
-fun ShowVoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
+fun VoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
     if (voteUiState.voterId.isNotEmpty() && voteUiState.responseMessage.isEmpty()) {
         Toast.makeText(
             LocalContext.current,
@@ -159,4 +153,16 @@ fun ShowVoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Uni
     }
 
     callback()
+}
+
+fun handleScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
+    when (scanResult.resultStatus) {
+        ResultStatus.FINISHED -> {
+            onFinished()
+        }
+
+        ResultStatus.CANCELLED -> {}
+        ResultStatus.EXCEPTION -> {}
+        else -> {}
+    }
 }
