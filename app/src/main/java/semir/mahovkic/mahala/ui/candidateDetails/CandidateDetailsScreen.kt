@@ -88,7 +88,10 @@ fun CandidateDetails(
     candidateDetails: CandidateDetailsUiState,
     onCandidateClick: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+    ) {
         Row(
             modifier = Modifier
                 .padding(all = 8.dp)
@@ -159,7 +162,6 @@ fun CandidateDetails(
             ) {
                 Button(
                     onClick = onCandidateClick,
-                    shape = CutCornerShape(5),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .align(Alignment.Center)
