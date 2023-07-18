@@ -1,5 +1,8 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.launch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,10 +28,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import com.microblink.blinkid.activity.result.OneSideScanResult
+import com.microblink.blinkid.activity.result.ResultStatus
+import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import semir.mahovkic.mahala.R
-import java.util.UUID
 
 @Composable
 fun CandidateDetailsScreen(
@@ -40,9 +44,28 @@ fun CandidateDetailsScreen(
 
     val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val idScanLauncher =
+        rememberLauncherForActivityResult(OneSideDocumentScan()) { oneSideScanResult: OneSideScanResult ->
+            when (oneSideScanResult.resultStatus) {
+                ResultStatus.FINISHED -> {
+                    oneSideScanResult.result?.documentNumber?.value()?.also {
+                        Log.i("SCAN", "voter $it voting for ${uiState.id}")
+                        viewModel.vote(uiState.id, it)
+                    }
+                }
+
+                ResultStatus.CANCELLED -> {}
+                ResultStatus.EXCEPTION -> {}
+                else -> {}
+            }
+        }
+
     CandidateDetails(candidateDetails = uiState) {
-        val voterId = UUID.randomUUID().toString()
-        viewModel.vote(uiState.id, voterId)
+        try {
+            idScanLauncher.launch()
+        } catch (e: Exception) {
+            Log.e("SCAN", e.toString())
+        }
     }
 }
 
