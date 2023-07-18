@@ -11,3 +11,8 @@ data class CandidateDetailsUiState(
 data class CandidateVoteUiState(
     val voterId: String
 )
+
+data class VoteDetailsUiState(
+    val voterId: String = "",
+    val responseMessage: String = ""
+)

@@ -1,6 +1,7 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
 import androidx.compose.foundation.Image
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,9 +43,14 @@ fun CandidateDetailsScreen(
     candidateId: String,
     viewModel: CandidateDetailsViewModel
 ) {
+    val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
+
     viewModel.loadCandidateDetails(candidateId)
 
-    val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    ShowVoteResponseMessage(voteUiState) {
+        viewModel.resetVoteUiState()
+    }
 
     val idScanLauncher =
         rememberLauncherForActivityResult(OneSideDocumentScan()) { oneSideScanResult: OneSideScanResult ->
@@ -135,4 +142,21 @@ fun CandidateDetails(
             }
         }
     }
+}
+
+@Composable
+fun ShowVoteResponseMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
+    if (voteUiState.voterId.isNotEmpty() && voteUiState.responseMessage.isEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            "voter ${voteUiState.voterId} finished voting",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    if (voteUiState.responseMessage.isNotEmpty()) {
+        Toast.makeText(LocalContext.current, voteUiState.responseMessage, Toast.LENGTH_LONG).show()
+    }
+
+    callback()
 }
