@@ -70,7 +70,6 @@ fun CandidatesScreen(
             CandidatesList(uiState.candidates, searchBy.value.text) { candidateId ->
                 navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
             }
-
             PullRefreshIndicator(
                 uiState.isRefreshing,
                 pullRefreshState,
@@ -90,7 +89,11 @@ fun CandidatesList(
 
     LazyColumn {
         if (searchBy.isNotBlank()) {
-            filtered.addAll(candidates.filter { it.name.contains(searchBy) || it.party.contains(searchBy) })
+            filtered.addAll(candidates.filter {
+                it.name.contains(searchBy) || it.party.contains(
+                    searchBy
+                )
+            })
         } else {
             filtered.addAll(candidates)
         }
@@ -175,7 +178,7 @@ fun SearchView(state: MutableState<TextFieldValue>) {
                 IconButton(
                     onClick = {
                         state.value =
-                            TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+                            TextFieldValue("")
                     }
                 ) {
                     Icon(
@@ -189,7 +192,7 @@ fun SearchView(state: MutableState<TextFieldValue>) {
             }
         },
         singleLine = true,
-        shape = RectangleShape, // The TextFiled has rounded corners top left and right by default
+        shape = RectangleShape,
         colors = TextFieldDefaults.textFieldColors(
             textColor = Color.White,
             cursorColor = Color.White,
