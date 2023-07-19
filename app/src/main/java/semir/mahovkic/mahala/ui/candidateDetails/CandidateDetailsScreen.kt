@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -135,7 +136,7 @@ fun CandidateDetails(
                         Text(
                             text = "Total votes: ${candidateDetails.votes?.size ?: 0}",
                             color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.padding(all = 4.dp)
                         )
                         Spacer(modifier = Modifier.height(15.dp))
@@ -146,7 +147,8 @@ fun CandidateDetails(
                             Text(
                                 text = candidateDetails.party,
                                 color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .padding(all = 5.dp)
                                     .align(Alignment.BottomEnd),

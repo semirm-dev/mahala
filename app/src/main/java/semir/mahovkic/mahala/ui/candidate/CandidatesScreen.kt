@@ -42,13 +42,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
 import semir.mahovkic.mahala.ui.Screens
+import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -90,7 +93,7 @@ fun CandidatesList(
     LazyColumn {
         if (searchBy.isNotBlank()) {
             filtered.addAll(candidates.filter {
-                it.name.contains(searchBy) || it.party.contains(
+                it.name.lowercase().contains(searchBy) || it.party.lowercase().contains(
                     searchBy
                 )
             })
@@ -141,7 +144,7 @@ fun CandidateCard(
                 Text(
                     text = candidate.name,
                     color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(all = 4.dp)
                 )
             }
@@ -149,6 +152,7 @@ fun CandidateCard(
             Text(
                 text = candidate.party,
                 color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
