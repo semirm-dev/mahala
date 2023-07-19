@@ -65,9 +65,14 @@ fun CandidateDetailsScreen(
                         viewModel.setVoteMessage(it)
                     }
 
-                    r.isExpired.let {
-                        r.dateOfExpiry?.let {
-                            viewModel.setVoteMessage(voterId.toString(), "id expired: ${it.date}")
+                    r.isExpired.let { expired ->
+                        if (expired) {
+                            r.dateOfExpiry?.let {
+                                viewModel.setVoteMessage(
+                                    voterId.toString(),
+                                    "id $voterId expired: ${it.date}"
+                                )
+                            }
                         }
                     }
                 }
