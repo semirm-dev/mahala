@@ -16,14 +16,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +52,9 @@ fun CandidateDetailsScreen(
 ) {
     val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
+    val voterId = remember {
+        mutableStateOf("")
+    }
 
     viewModel.loadCandidateDetails(candidateId)
 
@@ -58,17 +66,16 @@ fun CandidateDetailsScreen(
         rememberLauncherForActivityResult(OneSideDocumentScan()) { scanResult: OneSideScanResult ->
             handleScanResult(scanResult) {
                 scanResult.result?.let { r ->
-                    val voterId = r.documentNumber?.value()?.also {
-                        viewModel.vote(uiState.id, it)
-                        viewModel.setVoteMessage(it)
+                    r.documentNumber?.value()?.let {
+                        voterId.value = it
                     }
 
                     r.isExpired.let { expired ->
                         if (expired) {
                             r.dateOfExpiry?.let {
                                 viewModel.setVoteMessage(
-                                    voterId.toString(),
-                                    "id $voterId expired: ${it.date}"
+                                    voterId.value,
+                                    "id ${voterId.value} expired: ${it.date}"
                                 )
                             }
                         }
@@ -77,19 +84,25 @@ fun CandidateDetailsScreen(
             }
         }
 
-    CandidateDetails(candidateDetails = uiState) {
+    CandidateDetails(candidateDetails = uiState, voterId, {
         try {
             idScanLauncher.launch()
         } catch (e: Exception) {
             Log.e("SCAN", e.toString())
         }
-    }
+    }, {
+        viewModel.vote(uiState.id, voterId.value)
+        viewModel.setVoteMessage(voterId.value)
+        voterId.value = ""
+    })
 }
 
 @Composable
 fun CandidateDetails(
     candidateDetails: CandidateDetailsUiState,
-    onCandidateClick: () -> Unit
+    voterId: MutableState<String>,
+    onScanClick: () -> Unit,
+    onVoteClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(4.dp)
@@ -156,13 +169,45 @@ fun CandidateDetails(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            OutlinedTextField(
+                value = voterId.value,
+                onValueChange = { },
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Button(
+                onClick = onScanClick,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Text(
+                    text = "Scan",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .wrapContentWidth()
+                )
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
             Button(
-                onClick = onCandidateClick,
+                onClick = onVoteClick,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.align(Alignment.Center)
             ) {
