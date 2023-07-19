@@ -107,126 +107,149 @@ fun CandidateDetails(
     Column(
         modifier = Modifier.padding(4.dp)
     ) {
-        Row(
+        DetailsView(candidateDetails)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        ScanView(voterId, onScanClick)
+
+        VoteView(voterId, onVoteClick)
+    }
+}
+
+@Composable
+fun DetailsView(
+    candidateDetails: CandidateDetailsUiState,
+) {
+    Row(
+        modifier = Modifier
+            .padding(all = 8.dp)
+            .fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(R.drawable.semirmahovkic),
+            contentDescription = "Candidate profile image",
             modifier = Modifier
-                .padding(all = 8.dp)
+                .size(130.dp)
+                .clip(CircleShape)
+                .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+        )
+
+        Spacer(modifier = Modifier.width(10.dp))
+
+        Box(
+            modifier = Modifier
                 .fillMaxWidth()
+                .align(Alignment.CenterVertically)
         ) {
-            Image(
-                painter = painterResource(R.drawable.semirmahovkic),
-                contentDescription = "Candidate profile image",
-                modifier = Modifier
-                    .size(130.dp)
-                    .clip(CircleShape)
-                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            )
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterVertically)
+            Surface(
+                shape = MaterialTheme.shapes.medium,
+                shadowElevation = 2.dp,
             ) {
-                Surface(
-                    shape = MaterialTheme.shapes.medium,
-                    shadowElevation = 2.dp,
+                Column(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
+                    Text(
+                        text = candidateDetails.name,
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(all = 4.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(35.dp))
+
+                    Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = candidateDetails.name,
+                            text = "Votes: ${candidateDetails.votes?.size ?: 0}",
                             color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(all = 4.dp)
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier
+                                .padding(all = 4.dp)
+                                .align(Alignment.BottomStart)
                         )
-
-                        Spacer(modifier = Modifier.height(35.dp))
-
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "Votes: ${candidateDetails.votes?.size ?: 0}",
-                                color = MaterialTheme.colorScheme.secondary,
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier
-                                    .padding(all = 4.dp)
-                                    .align(Alignment.BottomStart)
-                            )
-                            Text(
-                                text = candidateDetails.party,
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(all = 5.dp)
-                                    .align(Alignment.BottomEnd),
-                            )
-                        }
+                        Text(
+                            text = candidateDetails.party,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(all = 5.dp)
+                                .align(Alignment.BottomEnd),
+                        )
                     }
                 }
             }
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(20.dp))
+@Composable
+fun ScanView(
+    voterId: MutableState<String>,
+    onScanClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        OutlinedTextField(
+            value = voterId.value,
+            onValueChange = { voterId.value = it },
+            placeholder = {
+                Text(
+                    text = "Your ID number",
+                    color = Color.LightGray,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            },
+            modifier = Modifier.weight(1f),
+            textStyle = MaterialTheme.typography.titleLarge,
+        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
+        Spacer(modifier = Modifier.width(10.dp))
+
+        Button(
+            onClick = onScanClick,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            modifier = Modifier.align(Alignment.CenterVertically)
         ) {
-            OutlinedTextField(
-                value = voterId.value,
-                onValueChange = { voterId.value = it },
-                placeholder = {
-                    Text(
-                        text = "Your ID number",
-                        color = Color.LightGray,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                },
-                modifier = Modifier.weight(1f),
-                textStyle = MaterialTheme.typography.titleLarge,
+            Text(
+                text = "Scan",
+                color = Color.White,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .wrapContentWidth()
             )
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Button(
-                onClick = onScanClick,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                modifier = Modifier.align(Alignment.CenterVertically)
-            ) {
-                Text(
-                    text = "Scan",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .wrapContentWidth()
-                )
-            }
         }
+    }
+}
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
+@Composable
+fun VoteView(
+    voterId: MutableState<String>,
+    onVoteClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        Button(
+            onClick = onVoteClick,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            enabled = voterId.value.trim().isNotEmpty(),
+            modifier = Modifier.align(Alignment.Center)
         ) {
-            Button(
-                onClick = onVoteClick,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                enabled = voterId.value.trim().isNotEmpty(),
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(
-                    text = "Vote",
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(20.dp)
-                )
-            }
+            Text(
+                text = "Vote",
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(20.dp)
+            )
         }
     }
 }
