@@ -180,6 +180,13 @@ fun CandidateDetails(
             OutlinedTextField(
                 value = voterId.value,
                 onValueChange = { voterId.value = it },
+                placeholder = {
+                    Text(
+                        text = "Your ID number",
+                        color = Color.LightGray,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
                 modifier = Modifier.weight(1f),
                 textStyle = MaterialTheme.typography.titleLarge,
             )
