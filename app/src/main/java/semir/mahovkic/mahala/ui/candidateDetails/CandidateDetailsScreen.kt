@@ -145,7 +145,7 @@ fun CandidateDetails(
                         ) {
                             Text(
                                 text = candidateDetails.party,
-                                color = Color.Blue,
+                                color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
                                     .padding(all = 5.dp)
@@ -176,7 +176,7 @@ fun CandidateDetails(
                         color = Color.White,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
-                            .padding(10.dp)
+                            .padding(20.dp)
                     )
                 }
             }

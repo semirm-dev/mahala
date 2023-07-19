@@ -148,7 +148,7 @@ fun CandidateCard(
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = candidate.party,
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
