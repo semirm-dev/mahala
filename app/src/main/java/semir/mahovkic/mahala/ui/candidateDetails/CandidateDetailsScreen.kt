@@ -179,7 +179,7 @@ fun CandidateDetails(
         ) {
             OutlinedTextField(
                 value = voterId.value,
-                onValueChange = { },
+                onValueChange = { voterId.value = it },
                 modifier = Modifier.weight(1f)
             )
 
