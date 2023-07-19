@@ -180,7 +180,8 @@ fun CandidateDetails(
             OutlinedTextField(
                 value = voterId.value,
                 onValueChange = { voterId.value = it },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                textStyle = MaterialTheme.typography.titleLarge,
             )
 
             Spacer(modifier = Modifier.width(10.dp))
