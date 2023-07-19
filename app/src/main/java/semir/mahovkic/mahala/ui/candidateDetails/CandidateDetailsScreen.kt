@@ -161,22 +161,17 @@ fun CandidateDetails(
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-            Surface(
-                shape = MaterialTheme.shapes.medium,
+            Button(
+                onClick = onCandidateClick,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier.align(Alignment.Center)
             ) {
-                Button(
-                    onClick = onCandidateClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    Text(
-                        text = "Vote",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(20.dp)
-                    )
-                }
+                Text(
+                    text = "Vote",
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(20.dp)
+                )
             }
         }
     }

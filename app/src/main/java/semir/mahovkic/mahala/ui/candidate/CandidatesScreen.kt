@@ -142,7 +142,9 @@ fun CandidateCard(
                     modifier = Modifier.padding(all = 4.dp)
                 )
             }
+
             Spacer(modifier = Modifier.height(5.dp))
+
             Text(
                 text = candidate.party,
                 color = MaterialTheme.colorScheme.primary,
