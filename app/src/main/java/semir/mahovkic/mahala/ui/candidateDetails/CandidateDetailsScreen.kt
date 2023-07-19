@@ -210,6 +210,7 @@ fun CandidateDetails(
             Button(
                 onClick = onVoteClick,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                enabled = voterId.value.trim().isNotEmpty(),
                 modifier = Modifier.align(Alignment.Center)
             ) {
                 Text(
