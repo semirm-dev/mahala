@@ -4,7 +4,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +59,6 @@ fun CandidateDetailsScreen(
             handleScanResult(scanResult) {
                 scanResult.result?.let { r ->
                     val voterId = r.documentNumber?.value()?.also {
-                        Log.i("SCAN", "voter $it voting for ${uiState.id}")
                         viewModel.vote(uiState.id, it)
                         viewModel.setVoteMessage(it)
                     }
@@ -95,8 +92,7 @@ fun CandidateDetails(
     onCandidateClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .padding(4.dp)
+        modifier = Modifier.padding(4.dp)
     ) {
         Row(
             modifier = Modifier
@@ -122,7 +118,6 @@ fun CandidateDetails(
                 Surface(
                     shape = MaterialTheme.shapes.medium,
                     shadowElevation = 2.dp,
-                    modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
@@ -133,17 +128,20 @@ fun CandidateDetails(
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.padding(all = 4.dp)
                         )
-                        Text(
-                            text = "Total votes: ${candidateDetails.votes?.size ?: 0}",
-                            color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(all = 4.dp)
-                        )
-                        Spacer(modifier = Modifier.height(15.dp))
+
+                        Spacer(modifier = Modifier.height(35.dp))
+
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth()
                         ) {
+                            Text(
+                                text = "Votes: ${candidateDetails.votes?.size ?: 0}",
+                                color = MaterialTheme.colorScheme.secondary,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier
+                                    .padding(all = 4.dp)
+                                    .align(Alignment.BottomStart)
+                            )
                             Text(
                                 text = candidateDetails.party,
                                 color = MaterialTheme.colorScheme.primary,
@@ -170,15 +168,13 @@ fun CandidateDetails(
                 Button(
                     onClick = onCandidateClick,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(
                         text = "Vote",
                         color = Color.White,
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(20.dp)
+                        modifier = Modifier.padding(20.dp)
                     )
                 }
             }

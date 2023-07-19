@@ -44,14 +44,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.R
 import semir.mahovkic.mahala.ui.Screens
-import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -64,13 +62,13 @@ fun CandidatesScreen(
     val pullRefreshState =
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
 
-    val searchBy = remember { mutableStateOf(TextFieldValue("")) }
+    val filterBy = remember { mutableStateOf(TextFieldValue("")) }
 
     Column {
-        SearchView(searchBy)
+        SearchView(filterBy)
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
-            CandidatesList(uiState.candidates, searchBy.value.text) { candidateId ->
+            CandidatesList(uiState.candidates, filterBy.value.text) { candidateId ->
                 navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
             }
             PullRefreshIndicator(
@@ -85,22 +83,18 @@ fun CandidatesScreen(
 @Composable
 fun CandidatesList(
     candidates: List<CandidateUiState>,
-    searchBy: String,
+    filterBy: String,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
-    val filtered = mutableListOf<CandidateUiState>()
+    val filtered = if (filterBy.isBlank()) {
+        candidates
+    } else {
+        candidates.filter {
+            it.name.lowercase().contains(filterBy) || it.party.lowercase().contains(filterBy)
+        }
+    }
 
     LazyColumn {
-        if (searchBy.isNotBlank()) {
-            filtered.addAll(candidates.filter {
-                it.name.lowercase().contains(searchBy) || it.party.lowercase().contains(
-                    searchBy
-                )
-            })
-        } else {
-            filtered.addAll(candidates)
-        }
-
         items(filtered, key = { it.id }) { candidate ->
             CandidateCard(candidate) {
                 onCandidateClick(candidate.id)
@@ -114,12 +108,13 @@ fun CandidateCard(
     candidate: CandidateUiState,
     onCandidateClick: () -> Unit
 ) {
-    Row(modifier = Modifier
-        .padding(all = 8.dp)
-        .fillMaxWidth()
-        .clickable {
-            onCandidateClick()
-        }) {
+    Row(
+        modifier = Modifier
+            .padding(all = 8.dp)
+            .fillMaxWidth()
+            .clickable {
+                onCandidateClick()
+            }) {
         Image(
             painter = painterResource(R.drawable.semirmahovkic),
             contentDescription = "Candidate profile image",
@@ -139,7 +134,6 @@ fun CandidateCard(
             Surface(
                 shape = MaterialTheme.shapes.medium,
                 shadowElevation = 2.dp,
-                modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(
                     text = candidate.name,
