@@ -196,7 +196,7 @@ fun CandidateDetails(
                     color = Color.White,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
-                        .padding(4.dp)
+                        .padding(10.dp)
                         .wrapContentWidth()
                 )
             }
