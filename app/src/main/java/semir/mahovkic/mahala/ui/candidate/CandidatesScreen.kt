@@ -84,7 +84,9 @@ fun CandidatesList(
         candidates
     } else {
         candidates.filter {
-            it.name.lowercase().contains(filterBy) || it.party.lowercase().contains(filterBy)
+            it.name.lowercase().contains(filterBy)
+                    || it.party.lowercase().contains(filterBy)
+                    || it.votingNumber.toString().contains(filterBy)
         }
     }
 
