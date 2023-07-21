@@ -80,15 +80,7 @@ fun CandidatesList(
     filterBy: String,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
-    val filtered = if (filterBy.isBlank()) {
-        candidates
-    } else {
-        candidates.filter {
-            it.name.lowercase().contains(filterBy)
-                    || it.party.lowercase().contains(filterBy)
-                    || it.votingNumber.toString().contains(filterBy)
-        }
-    }
+    val filtered = filterCandidates(candidates, filterBy)
 
     LazyColumn {
         items(filtered, key = { it.id }) { candidate ->
@@ -213,4 +205,18 @@ fun SearchView(state: MutableState<TextFieldValue>) {
             disabledIndicatorColor = Color.Transparent
         )
     )
+}
+
+fun filterCandidates(candidates: List<CandidateUiState>, filterBy: String): List<CandidateUiState> {
+    val filtered = if (filterBy.isBlank()) {
+        candidates
+    } else {
+        candidates.filter {
+            it.name.lowercase().contains(filterBy)
+                    || it.party.lowercase().contains(filterBy)
+                    || it.votingNumber.toString().contains(filterBy)
+        }
+    }
+
+    return filtered
 }
