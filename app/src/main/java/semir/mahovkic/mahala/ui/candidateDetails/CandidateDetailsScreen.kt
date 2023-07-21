@@ -4,8 +4,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,10 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,7 +36,6 @@ import androidx.navigation.NavController
 import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
-import semir.mahovkic.mahala.R
 import semir.mahovkic.mahala.ui.ProfileImage
 
 @Composable
@@ -59,7 +52,7 @@ fun CandidateDetailsScreen(
 
     viewModel.loadCandidateDetails(candidateId)
 
-    DisplayVoteMessage(voteUiState) {
+    DisplayVoteMessage(voteUiState.message) {
         viewModel.resetVoteUiState()
     }
 
@@ -75,7 +68,6 @@ fun CandidateDetailsScreen(
                         if (expired) {
                             r.dateOfExpiry?.let {
                                 viewModel.setVoteMessage(
-                                    voterId.value,
                                     "id ${voterId.value} expired: ${it.date}"
                                 )
                             }
@@ -93,7 +85,6 @@ fun CandidateDetailsScreen(
         }
     }, {
         viewModel.vote(uiState.id, voterId.value)
-        viewModel.setVoteMessage(voterId.value)
         voterId.value = ""
     })
 }
@@ -261,20 +252,16 @@ fun VoteView(
 }
 
 @Composable
-fun DisplayVoteMessage(voteUiState: VoteDetailsUiState, callback: () -> Unit) {
-    if (voteUiState.voterId.isNotEmpty() && voteUiState.message.isEmpty()) {
+fun DisplayVoteMessage(message: String, callback: () -> Unit) {
+    if (message.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            "voter ${voteUiState.voterId} finished voting",
+            message,
             Toast.LENGTH_LONG
         ).show()
-    }
 
-    if (voteUiState.message.isNotEmpty()) {
-        Toast.makeText(LocalContext.current, voteUiState.message, Toast.LENGTH_LONG).show()
+        callback()
     }
-
-    callback()
 }
 
 fun handleScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
