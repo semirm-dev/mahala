@@ -28,6 +28,7 @@ class MahalaService @Inject constructor() : VotesApi {
 fun CandidateDto.toCandidate(): Candidate = Candidate(
     id = id,
     name = name,
+    votingNumber = votingNumber,
     profileImg = profileImg,
     party = party,
 )
@@ -35,6 +36,7 @@ fun CandidateDto.toCandidate(): Candidate = Candidate(
 fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetails(
     id = id,
     name = name,
+    votingNumber = votingNumber,
     profileImg = profileImg,
     party = party,
     votes = votes?.map { it.toCandidateVote() }

@@ -68,6 +68,7 @@ class CandidateDetailsViewModel @Inject constructor(
 fun CandidateDetails.toCandidateDetailsUiState(): CandidateDetailsUiState = CandidateDetailsUiState(
     id = id,
     name = name,
+    votingNumber = votingNumber,
     profileImg = profileImg,
     party = party,
     votes = votes?.map { v -> v.toCandidateVoteUiState() }

@@ -43,6 +43,7 @@ class CandidatesViewModel @Inject constructor(
 fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
     id = id,
     name = name,
+    votingNumber = votingNumber,
     profileImg = profileImg,
     party = party,
 )

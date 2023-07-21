@@ -43,6 +43,7 @@ import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import semir.mahovkic.mahala.R
+import semir.mahovkic.mahala.ui.ProfileImage
 
 @Composable
 fun CandidateDetailsScreen(
@@ -111,6 +112,17 @@ fun CandidateDetails(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        Text(
+            text = "Total votes: ${candidateDetails.votes?.size ?: 0}",
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(all = 4.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         ScanView(voterId, onScanClick)
 
         VoteView(voterId, onVoteClick)
@@ -126,14 +138,7 @@ fun DetailsView(
             .padding(all = 8.dp)
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(R.drawable.semirmahovkic),
-            contentDescription = "Candidate profile image",
-            modifier = Modifier
-                .size(130.dp)
-                .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+        ProfileImage(candidateDetails.profileImg, 130)
 
         Spacer(modifier = Modifier.width(10.dp))
 
@@ -162,9 +167,10 @@ fun DetailsView(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Votes: ${candidateDetails.votes?.size ?: 0}",
+                            text = "Nr: ${candidateDetails.votingNumber}",
                             color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .padding(all = 4.dp)
                                 .align(Alignment.BottomStart)

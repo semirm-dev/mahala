@@ -1,13 +1,10 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -37,10 +33,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -48,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import semir.mahovkic.mahala.R
+import semir.mahovkic.mahala.ui.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -115,42 +109,55 @@ fun CandidateCard(
             .clickable {
                 onCandidateClick()
             }) {
-        Image(
-            painter = painterResource(R.drawable.semirmahovkic),
-            contentDescription = "Candidate profile image",
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+        ProfileImage(candidate.profileImg)
 
         Spacer(modifier = Modifier.width(10.dp))
 
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .align(Alignment.CenterVertically)
         ) {
             Surface(
                 shape = MaterialTheme.shapes.medium,
                 shadowElevation = 2.dp,
             ) {
-                Text(
-                    text = candidate.name,
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(all = 4.dp)
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = candidate.name,
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(all = 4.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(35.dp))
+
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Nr: ${candidate.votingNumber}",
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(all = 4.dp)
+                                .align(Alignment.BottomStart)
+                        )
+                        Text(
+                            text = candidate.party,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(all = 5.dp)
+                                .align(Alignment.BottomEnd),
+                        )
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Text(
-                text = candidate.party,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.align(Alignment.CenterEnd)
-            )
         }
     }
 }

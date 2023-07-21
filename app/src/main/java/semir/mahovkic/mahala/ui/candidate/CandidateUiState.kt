@@ -8,6 +8,7 @@ data class CandidatesUiState(
 data class CandidateUiState(
     val id: String,
     val name: String,
-    val profileImg: Int = 0,
-    val party: String = ""
+    val votingNumber: Int,
+    val profileImg: String?,
+    val party: String
 )
