@@ -10,5 +10,6 @@ data class CandidateUiState(
     val name: String,
     val votingNumber: Int,
     val profileImg: String?,
+    val gender: String,
     val party: String
 )

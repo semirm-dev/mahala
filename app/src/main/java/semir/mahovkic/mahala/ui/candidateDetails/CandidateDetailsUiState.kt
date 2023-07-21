@@ -5,6 +5,7 @@ data class CandidateDetailsUiState(
     val name: String = "",
     val votingNumber: Int = 0,
     val profileImg: String? = "",
+    val gender: String = "",
     val party: String = "",
     var votes: List<CandidateVoteUiState>? = listOf()
 )

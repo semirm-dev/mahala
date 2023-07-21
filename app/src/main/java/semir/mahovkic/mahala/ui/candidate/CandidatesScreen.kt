@@ -104,7 +104,7 @@ fun CandidateCard(
             .clickable {
                 onCandidateClick()
             }) {
-        ProfileImage(candidate.profileImg)
+        ProfileImage(candidate.profileImg, candidate.gender)
 
         Spacer(modifier = Modifier.width(10.dp))
 

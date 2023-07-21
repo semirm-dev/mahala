@@ -5,5 +5,6 @@ data class Candidate(
     var name: String,
     val votingNumber: Int,
     var profileImg: String?,
+    val gender: String,
     var party: String
 )

@@ -129,7 +129,7 @@ fun DetailsView(
             .padding(all = 8.dp)
             .fillMaxWidth()
     ) {
-        ProfileImage(candidateDetails.profileImg, 130)
+        ProfileImage(candidateDetails.profileImg, candidateDetails.gender, 130)
 
         Spacer(modifier = Modifier.width(10.dp))
 

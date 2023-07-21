@@ -30,6 +30,7 @@ fun CandidateDto.toCandidate(): Candidate = Candidate(
     name = name,
     votingNumber = votingNumber,
     profileImg = profileImg,
+    gender = gender,
     party = party,
 )
 
@@ -38,6 +39,7 @@ fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetail
     name = name,
     votingNumber = votingNumber,
     profileImg = profileImg,
+    gender = gender,
     party = party,
     votes = votes?.map { it.toCandidateVote() }
 )

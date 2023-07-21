@@ -73,6 +73,7 @@ fun CandidateDetails.toCandidateDetailsUiState(): CandidateDetailsUiState = Cand
     name = name,
     votingNumber = votingNumber,
     profileImg = profileImg,
+    gender = gender,
     party = party,
     votes = votes?.map { v -> v.toCandidateVoteUiState() }
 )

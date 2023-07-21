@@ -5,6 +5,7 @@ data class CandidateDetails(
     val name: String,
     val votingNumber: Int,
     val profileImg: String?,
+    val gender: String,
     val party: String,
     var votes: List<CandidateVote>? = listOf()
 )
