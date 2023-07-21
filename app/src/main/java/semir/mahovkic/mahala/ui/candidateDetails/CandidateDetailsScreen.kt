@@ -160,8 +160,8 @@ fun DetailsView(
                         Text(
                             text = "Nr: ${candidateDetails.votingNumber}",
                             color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
                             modifier = Modifier
                                 .padding(all = 4.dp)
                                 .align(Alignment.BottomStart)
