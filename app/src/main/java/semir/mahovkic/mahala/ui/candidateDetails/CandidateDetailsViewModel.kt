@@ -47,17 +47,18 @@ class CandidateDetailsViewModel @Inject constructor(
                     return@launch
                 }
 
-                candidatesRepository.vote(candidateId, voterId)
-                val response = loadCandidateDetails(candidateId)
-                Log.i("VOTE", "response: $response")
-
-                setVoteMessage("voter $voterId finished voting")
+                val response = candidatesRepository.vote(candidateId, voterId)
+                setVoteMessage(response)
+                loadCandidateDetails(candidateId)
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
-                val responseBody = e.response()?.errorBody()?.string()?.let { JSONObject(it) }
-                val responseMessage = responseBody?.getString("message")
+
+                val responseMessage = e.response()?.errorBody()?.string()?.let {
+                    JSONObject(it)
+                }?.getString("message").toString()
+
                 setVoteMessage(
-                    responseMessage.toString().replaceFirstChar { it.titlecase(Locale.ROOT) }
+                    responseMessage.replaceFirstChar { it.titlecase(Locale.ROOT) }
                 )
             }
         }
