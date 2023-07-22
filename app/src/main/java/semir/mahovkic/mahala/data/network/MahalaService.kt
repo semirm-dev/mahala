@@ -21,8 +21,8 @@ class MahalaService @Inject constructor() : VotesApi {
         return _api.getCandidateDetails(candidateId).toCandidateDetails()
     }
 
-    override suspend fun vote(candidateId: String, voterId: String) =
-        _api.vote(SendVoteDto(candidateId, voterId))
+    override suspend fun vote(candidateId: String, voterId: String): String =
+        _api.vote(SendVoteDto(candidateId, voterId)).message
 }
 
 fun CandidateDto.toCandidate(): Candidate = Candidate(

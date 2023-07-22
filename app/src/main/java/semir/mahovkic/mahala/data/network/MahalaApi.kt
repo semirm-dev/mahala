@@ -8,6 +8,7 @@ import retrofit2.http.Query
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
+import semir.mahovkic.mahala.data.network.model.VoteResponseDto
 
 interface MahalaApi {
     @GET("candidates")
@@ -17,5 +18,5 @@ interface MahalaApi {
     suspend fun getCandidateDetails(@Path("id") candidateId: String): CandidateDetailsDto
 
     @POST("votes")
-    suspend fun vote(@Body votingTicket: SendVoteDto)
+    suspend fun vote(@Body votingTicket: SendVoteDto): VoteResponseDto
 }

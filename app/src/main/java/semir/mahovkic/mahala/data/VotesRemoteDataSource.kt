@@ -37,5 +37,5 @@ class VotesRemoteDataSource @Inject constructor(
 interface VotesApi {
     suspend fun getCandidatesStream(): List<Candidate>
     suspend fun getCandidateDetails(candidateId: String): CandidateDetails
-    suspend fun vote(candidateId: String, voterId: String)
+    suspend fun vote(candidateId: String, voterId: String): String
 }

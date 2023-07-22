@@ -4,3 +4,7 @@ data class SendVoteDto(
     val candidateId: String,
     val voterId: String,
 )
+
+data class VoteResponseDto(
+    val message: String
+)

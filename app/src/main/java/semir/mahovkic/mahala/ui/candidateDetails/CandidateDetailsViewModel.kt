@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.CandidateDetails
@@ -45,12 +46,15 @@ class CandidateDetailsViewModel @Inject constructor(
                 }
 
                 candidatesRepository.vote(candidateId, voterId)
-                loadCandidateDetails(candidateId)
+                val response = loadCandidateDetails(candidateId)
+                Log.i("VOTE", "response: $response")
 
                 setVoteMessage("voter $voterId finished voting")
             } catch (e: HttpException) {
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
-                setVoteMessage(e.response()?.message().toString())
+                val responseBody = e.response()?.errorBody()?.string()?.let { JSONObject(it) }
+                val responseMessage = responseBody?.getString("message")
+                setVoteMessage(responseMessage.toString())
             }
         }
     }
