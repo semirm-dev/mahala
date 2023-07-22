@@ -46,9 +46,7 @@ fun CandidateDetailsScreen(
 ) {
     val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
-    val voterId = remember {
-        mutableStateOf("")
-    }
+    val voterId = remember { mutableStateOf("") }
 
     viewModel.loadCandidateDetails(candidateId)
 
@@ -114,7 +112,7 @@ fun CandidateDetails(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ScanView(voterId, onScanClick)
+        ScanIDView(voterId, onScanClick)
 
         VoteView(voterId, onVoteClick)
     }
@@ -183,7 +181,7 @@ fun DetailsView(
 }
 
 @Composable
-fun ScanView(
+fun ScanIDView(
     voterId: MutableState<String>,
     onScanClick: () -> Unit,
 ) {

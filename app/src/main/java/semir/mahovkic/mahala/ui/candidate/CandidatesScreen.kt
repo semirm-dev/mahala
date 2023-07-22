@@ -103,7 +103,8 @@ fun CandidateCard(
             .fillMaxWidth()
             .clickable {
                 onCandidateClick()
-            }) {
+            }
+    ) {
         ProfileImage(candidate.profileImg, candidate.gender)
 
         Spacer(modifier = Modifier.width(10.dp))
