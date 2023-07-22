@@ -1,6 +1,7 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
 import android.util.Log
+import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.CandidateDetails
 import semir.mahovkic.mahala.data.model.CandidateVote
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +56,9 @@ class CandidateDetailsViewModel @Inject constructor(
                 Log.e("VOTE", "vote failed: ${e.response()?.message()}")
                 val responseBody = e.response()?.errorBody()?.string()?.let { JSONObject(it) }
                 val responseMessage = responseBody?.getString("message")
-                setVoteMessage(responseMessage.toString())
+                setVoteMessage(
+                    responseMessage.toString().replaceFirstChar { it.titlecase(Locale.ROOT) }
+                )
             }
         }
     }
