@@ -128,7 +128,7 @@ fun CandidateCard(
                         modifier = Modifier.padding(all = 4.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(35.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Box(
                         modifier = Modifier.fillMaxWidth()
