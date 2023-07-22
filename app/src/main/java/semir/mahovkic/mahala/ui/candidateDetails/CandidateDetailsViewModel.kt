@@ -1,7 +1,6 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
 import android.util.Log
-import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +14,8 @@ import semir.mahovkic.mahala.data.model.CandidateDetails
 import semir.mahovkic.mahala.data.model.CandidateVote
 import java.util.Locale
 import javax.inject.Inject
+
+const val VoteTag = "VOTE"
 
 @HiltViewModel
 class CandidateDetailsViewModel @Inject constructor(
@@ -34,7 +35,8 @@ class CandidateDetailsViewModel @Inject constructor(
                     _uiState.value = it.toCandidateDetailsUiState()
                 }
             } catch (e: HttpException) {
-                Log.e("VOTE", "loadCandidateDetails failed: ${e.response()?.message()}")
+                Log.e(VoteTag, "loadCandidateDetails failed: ${e.response()?.message()}")
+                setVoteMessage("Something went wrong!")
             }
         }
     }
@@ -47,11 +49,12 @@ class CandidateDetailsViewModel @Inject constructor(
                     return@launch
                 }
 
-                val response = candidatesRepository.vote(candidateId, voterId)
-                setVoteMessage(response)
+                candidatesRepository.vote(candidateId, voterId)
+                setVoteMessage("Your voting ticket has been sent successfully.")
+
                 loadCandidateDetails(candidateId)
             } catch (e: HttpException) {
-                Log.e("VOTE", "vote failed: ${e.response()?.message()}")
+                Log.e(VoteTag, "vote failed: ${e.response()?.message()}")
 
                 val responseMessage = e.response()?.errorBody()?.string()?.let {
                     JSONObject(it)
