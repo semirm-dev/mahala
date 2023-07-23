@@ -9,19 +9,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
+import semir.mahovkic.mahala.data.PartiesRepository
 import semir.mahovkic.mahala.data.model.Candidate
+import semir.mahovkic.mahala.data.model.Party
 import javax.inject.Inject
 
 @HiltViewModel
 class CandidatesViewModel @Inject constructor(
-    private val candidatesRepository: CandidatesRepository
+    private val candidatesRepository: CandidatesRepository,
+    private val partiesRepository: PartiesRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidatesUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _partiesUiState = MutableStateFlow(PartiesUiState())
+    val partyUiState = _partiesUiState.asStateFlow()
+
     init {
         loadCandidates()
+        loadParties()
     }
 
     fun loadCandidates() {
@@ -38,6 +45,20 @@ class CandidatesViewModel @Inject constructor(
             }
         }
     }
+
+    private fun loadParties() {
+        viewModelScope.launch {
+            try {
+                partiesRepository.getPartiesStream().collect {
+                    _partiesUiState.value = PartiesUiState(it.map { party ->
+                        party.toPartyUiState()
+                    })
+                }
+            } catch (e: HttpException) {
+                Log.e("VOTE", "loadCandidates failed: ${e.response()?.message()}")
+            }
+        }
+    }
 }
 
 fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
@@ -47,4 +68,8 @@ fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
     profileImg = profileImg,
     gender = gender,
     party = party,
+)
+
+fun Party.toPartyUiState(): PartyUiState = PartyUiState(
+    name = name
 )

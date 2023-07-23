@@ -13,3 +13,11 @@ data class CandidateUiState(
     val gender: String,
     val party: String
 )
+
+data class PartiesUiState(
+    val parties: List<PartyUiState> = listOf()
+)
+
+data class PartyUiState(
+    val name: String
+)

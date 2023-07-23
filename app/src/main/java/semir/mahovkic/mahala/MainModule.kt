@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import semir.mahovkic.mahala.data.PartiesApi
 import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.network.MahalaService
 
@@ -15,6 +16,9 @@ class MainModule {
 
     @Provides
     fun providesVotesApi(): VotesApi = MahalaService()
+
+    @Provides
+    fun providesPartiesApi(): PartiesApi = MahalaService()
 
     @Provides
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO

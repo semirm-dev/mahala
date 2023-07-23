@@ -4,9 +4,9 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
+import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import semir.mahovkic.mahala.data.network.model.VoteResponseDto
 
@@ -19,4 +19,7 @@ interface MahalaApi {
 
     @POST("votes")
     suspend fun vote(@Body votingTicket: SendVoteDto): VoteResponseDto
+
+    @GET("parties")
+    suspend fun getParties(): List<PartyDto>
 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -23,6 +24,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,13 +41,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
+
+const val EmptyParty = "All parties"
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -52,17 +57,21 @@ fun CandidatesScreen(
     viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val partiesUiState: PartiesUiState by viewModel.partyUiState.collectAsStateWithLifecycle()
 
     val pullRefreshState =
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
 
-    val filterBy = remember { mutableStateOf(TextFieldValue("")) }
+    val filterBy = remember { mutableStateOf("") }
+    val partyFilter = remember { mutableStateOf(EmptyParty) }
 
     Column {
         SearchView(filterBy)
 
+        PartyFilter(partiesUiState, partyFilter)
+
         Box(Modifier.pullRefresh(pullRefreshState)) {
-            CandidatesList(uiState.candidates, filterBy.value.text) { candidateId ->
+            CandidatesList(uiState.candidates, filterBy.value, partyFilter.value) { candidateId ->
                 navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
             }
             PullRefreshIndicator(
@@ -78,9 +87,10 @@ fun CandidatesScreen(
 fun CandidatesList(
     candidates: List<CandidateUiState>,
     filterBy: String,
+    partyFilter: String,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
-    val filtered = filterCandidates(candidates, filterBy)
+    val filtered = filterCandidates(candidates, filterBy, partyFilter)
 
     LazyColumn {
         items(filtered, key = { it.id }) { candidate ->
@@ -159,7 +169,7 @@ fun CandidateCard(
 }
 
 @Composable
-fun SearchView(state: MutableState<TextFieldValue>) {
+fun SearchView(state: MutableState<String>) {
     TextField(
         value = state.value,
         onValueChange = { value ->
@@ -177,11 +187,10 @@ fun SearchView(state: MutableState<TextFieldValue>) {
             )
         },
         trailingIcon = {
-            if (state.value != TextFieldValue("")) {
+            if (state.value != "") {
                 IconButton(
                     onClick = {
-                        state.value =
-                            TextFieldValue("")
+                        state.value = ""
                     }
                 ) {
                     Icon(
@@ -209,14 +218,74 @@ fun SearchView(state: MutableState<TextFieldValue>) {
     )
 }
 
-fun filterCandidates(candidates: List<CandidateUiState>, filterBy: String): List<CandidateUiState> {
-    val filtered = if (filterBy.isBlank()) {
+@Composable
+fun PartyFilter(partiesUiState: PartiesUiState, filterBy: MutableState<String>) {
+    val items = mutableListOf(EmptyParty)
+    partiesUiState.parties.forEach { p -> items.add(p.name) }
+    ExposedDropdownMenuBox(items, filterBy)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExposedDropdownMenuBox(
+    items: List<String>,
+    filterBy: MutableState<String>
+) {
+    val expanded = remember { mutableStateOf(false) }
+    val selectedText = remember { mutableStateOf(EmptyParty) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded.value,
+            onExpandedChange = {
+                expanded.value = !expanded.value
+            }
+        ) {
+            TextField(
+                value = selectedText.value,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
+                modifier = Modifier.menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false }
+            ) {
+                items.forEach { item ->
+                    DropdownMenuItem(
+                        onClick = {
+                            filterBy.value = item
+                            selectedText.value = item
+                            expanded.value = false
+                        },
+                        content = {
+                            Text(text = item)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun filterCandidates(
+    candidates: List<CandidateUiState>,
+    filterBy: String,
+    partyFilter: String
+): List<CandidateUiState> {
+    val filtered = if (filterBy.isEmpty() && partyFilter == EmptyParty) {
         candidates
     } else {
         candidates.filter {
-            it.name.lowercase().contains(filterBy)
-                    || it.party.lowercase().contains(filterBy)
-                    || it.votingNumber.toString().contains(filterBy)
+            (if (partyFilter == EmptyParty) true else it.party == partyFilter) &&
+                    (it.name.lowercase().contains(filterBy) ||
+                            it.votingNumber.toString().contains(filterBy))
         }
     }
 

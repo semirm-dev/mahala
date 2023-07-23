@@ -45,7 +45,7 @@ class CandidateDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if (!validVoter(voterId)) {
-                    setVoteMessage("invalid voter id")
+                    setVoteMessage("Invalid ID!")
                     return@launch
                 }
 

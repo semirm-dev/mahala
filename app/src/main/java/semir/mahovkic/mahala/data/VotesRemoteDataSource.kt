@@ -17,7 +17,7 @@ class VotesRemoteDataSource @Inject constructor(
 
     suspend fun getCandidatesStream(): Flow<List<Candidate>> =
         withContext(ioDispatcher) {
-            val resp = votesApi.getCandidatesStream()
+            val resp = votesApi.getCandidates()
             _candidates.clear()
             _candidates.addAll(resp)
             MutableStateFlow(_candidates)
@@ -35,7 +35,7 @@ class VotesRemoteDataSource @Inject constructor(
 }
 
 interface VotesApi {
-    suspend fun getCandidatesStream(): List<Candidate>
+    suspend fun getCandidates(): List<Candidate>
     suspend fun getCandidateDetails(candidateId: String): CandidateDetails
     suspend fun vote(candidateId: String, voterId: String): String
 }
