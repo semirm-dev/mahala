@@ -193,6 +193,7 @@ fun ScanIDView(
         OutlinedTextField(
             value = voterId.value,
             onValueChange = { voterId.value = it },
+            singleLine = true,
             placeholder = {
                 Text(
                     text = "Your ID number",
