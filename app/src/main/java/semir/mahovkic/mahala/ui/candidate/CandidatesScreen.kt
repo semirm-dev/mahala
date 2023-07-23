@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
+import semir.mahovkic.mahala.ui.theme.LightBlueSecondary
 
 const val EmptyParty = "All parties"
 
@@ -248,10 +249,18 @@ fun ExposedDropdownMenuBox(
                 value = filterBy.value,
                 onValueChange = {},
                 readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
+                textStyle = TextStyle(fontSize = 18.sp),
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
+                },
                 modifier = Modifier
                     .menuAnchor()
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.LightGray,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                )
             )
 
             ExposedDropdownMenu(
