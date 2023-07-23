@@ -237,7 +237,7 @@ fun ExposedDropdownMenuBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(8.dp)
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded.value,
@@ -250,7 +250,9 @@ fun ExposedDropdownMenuBox(
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
-                modifier = Modifier.menuAnchor()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
 
             ExposedDropdownMenu(
