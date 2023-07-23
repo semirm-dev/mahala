@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DropdownMenuItem
@@ -47,7 +48,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
-import semir.mahovkic.mahala.ui.theme.LightBlueSecondary
 
 const val EmptyParty = "All parties"
 
@@ -234,49 +234,52 @@ fun ExposedDropdownMenuBox(
 ) {
     val expanded = remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        ExposedDropdownMenuBox(
-            expanded = expanded.value,
-            onExpandedChange = {
-                expanded.value = !expanded.value
-            }
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
         ) {
-            TextField(
-                value = filterBy.value,
-                onValueChange = {},
-                readOnly = true,
-                textStyle = TextStyle(fontSize = 18.sp),
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
-                },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth(),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.LightGray,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                )
-            )
-
-            ExposedDropdownMenu(
+            ExposedDropdownMenuBox(
                 expanded = expanded.value,
-                onDismissRequest = { expanded.value = false }
+                onExpandedChange = {
+                    expanded.value = !expanded.value
+                },
+                modifier = Modifier.align(Alignment.BottomEnd),
             ) {
-                items.forEach { item ->
-                    DropdownMenuItem(
-                        onClick = {
-                            filterBy.value = item
-                            expanded.value = false
-                        },
-                        content = {
-                            Text(text = item)
-                        }
+                TextField(
+                    value = filterBy.value,
+                    onValueChange = {},
+                    readOnly = true,
+                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
+                    },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .width(170.dp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = MaterialTheme.colorScheme.primary
                     )
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded.value,
+                    onDismissRequest = { expanded.value = false }
+                ) {
+                    items.forEach { item ->
+                        DropdownMenuItem(
+                            onClick = {
+                                filterBy.value = item
+                                expanded.value = false
+                            },
+                            content = {
+                                Text(text = item)
+                            }
+                        )
+                    }
                 }
             }
         }
