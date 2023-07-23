@@ -232,7 +232,6 @@ fun ExposedDropdownMenuBox(
     filterBy: MutableState<String>
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val selectedText = remember { mutableStateOf(EmptyParty) }
 
     Box(
         modifier = Modifier
@@ -246,7 +245,7 @@ fun ExposedDropdownMenuBox(
             }
         ) {
             TextField(
-                value = selectedText.value,
+                value = filterBy.value,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
@@ -263,7 +262,6 @@ fun ExposedDropdownMenuBox(
                     DropdownMenuItem(
                         onClick = {
                             filterBy.value = item
-                            selectedText.value = item
                             expanded.value = false
                         },
                         content = {
