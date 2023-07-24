@@ -70,7 +70,7 @@ fun CandidatesScreen(
     Column {
         SearchView(searchBy)
 
-        PartyFilterView(partiesUiState, filterByParty)
+        PartiesFilter(partiesUiState, filterByParty)
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
             CandidatesList(uiState.candidates, searchBy.value, filterByParty.value) { candidateId ->
@@ -171,10 +171,10 @@ fun CandidateCard(
 }
 
 @Composable
-fun PartyFilterView(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
+fun PartiesFilter(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
     val parties = mutableListOf(EmptyFilterByParty)
     parties.addAll(partiesUiState.parties.map { it.name })
-    ExposedDropdownMenuBox(parties, filterByParty)
+    DropdownMenuView(parties, filterByParty)
 }
 
 @Composable
@@ -229,7 +229,7 @@ fun SearchView(searchBy: MutableState<String>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExposedDropdownMenuBox(
+fun DropdownMenuView(
     items: List<String>,
     filterBy: MutableState<String>
 ) {
