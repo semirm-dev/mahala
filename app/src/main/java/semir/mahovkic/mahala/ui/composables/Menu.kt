@@ -30,7 +30,8 @@ import semir.mahovkic.mahala.ui.candidate.EmptySearchBy
 @Composable
 fun DropdownMenuView(
     items: List<String>,
-    filterBy: MutableState<String>
+    filterBy: MutableState<String>,
+    searchable: Boolean = false
 ) {
     val expanded = remember { mutableStateOf(false) }
     val searchBy = remember { mutableStateOf(EmptySearchBy) }
@@ -70,13 +71,18 @@ fun DropdownMenuView(
                     expanded = expanded.value,
                     onDismissRequest = { expanded.value = false }
                 ) {
-                    SearchView(searchBy)
+
+                    if (searchable) {
+                        SearchView(searchBy)
+                    }
 
                     items.forEach { item ->
-                        if (searchBy.value.isNotEmpty() &&
-                            !item.lowercase().contains(searchBy.value.lowercase())
-                        ) {
-                            return@forEach
+                        if (searchable) {
+                            if (searchBy.value.isNotEmpty() &&
+                                !item.lowercase().contains(searchBy.value.lowercase())
+                            ) {
+                                return@forEach
+                            }
                         }
 
                         DropdownMenuItem(

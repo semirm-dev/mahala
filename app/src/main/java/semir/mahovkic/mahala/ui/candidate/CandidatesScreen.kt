@@ -159,7 +159,7 @@ fun CandidateCard(
 fun PartiesFilter(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
     val parties = mutableListOf(EmptyFilterByParty)
     parties.addAll(partiesUiState.parties.map { it.name })
-    DropdownMenuView(parties, filterByParty)
+    DropdownMenuView(parties, filterByParty, true)
 }
 
 fun filterCandidates(
