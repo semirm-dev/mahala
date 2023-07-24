@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
-import semir.mahovkic.mahala.ui.ProfileImage
+import semir.mahovkic.mahala.ui.composables.ProfileImage
 
 @Composable
 fun CandidateDetailsScreen(

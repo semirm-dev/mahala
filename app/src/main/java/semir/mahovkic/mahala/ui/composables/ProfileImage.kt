@@ -1,4 +1,4 @@
-package semir.mahovkic.mahala.ui
+package semir.mahovkic.mahala.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
