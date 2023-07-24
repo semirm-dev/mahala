@@ -49,7 +49,8 @@ import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
 
-const val EmptyParty = "All parties"
+const val EmptySearchBy = ""
+const val EmptyFilterByParty = "All parties"
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -64,7 +65,7 @@ fun CandidatesScreen(
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
 
     val searchBy = remember { mutableStateOf("") }
-    val filterByParty = remember { mutableStateOf(EmptyParty) }
+    val filterByParty = remember { mutableStateOf(EmptyFilterByParty) }
 
     Column {
         SearchView(searchBy)
@@ -170,10 +171,10 @@ fun CandidateCard(
 }
 
 @Composable
-fun PartyFilterView(partiesUiState: PartiesUiState, partyFilterBy: MutableState<String>) {
-    val parties = mutableListOf(EmptyParty)
+fun PartyFilterView(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
+    val parties = mutableListOf(EmptyFilterByParty)
     parties.addAll(partiesUiState.parties.map { it.name })
-    ExposedDropdownMenuBox(parties, partyFilterBy)
+    ExposedDropdownMenuBox(parties, filterByParty)
 }
 
 @Composable
@@ -301,11 +302,11 @@ fun filterCandidates(
     searchBy: String,
     filterByParty: String
 ): List<CandidateUiState> {
-    val filtered = if (searchBy.isEmpty() && filterByParty == EmptyParty) {
+    val filtered = if (searchBy.isEmpty() && filterByParty == EmptyFilterByParty) {
         candidates
     } else {
         candidates.filter {
-            (if (filterByParty == EmptyParty) true else it.party.lowercase() == filterByParty.lowercase()) &&
+            (if (filterByParty == EmptyFilterByParty) true else it.party.lowercase() == filterByParty.lowercase()) &&
                     (it.name.lowercase().contains(searchBy.lowercase()) ||
                             it.votingNumber.toString().contains(searchBy))
         }
