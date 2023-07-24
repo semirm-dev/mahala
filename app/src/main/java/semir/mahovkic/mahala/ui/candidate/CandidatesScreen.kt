@@ -64,7 +64,7 @@ fun CandidatesScreen(
     val pullRefreshState =
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
 
-    val searchBy = remember { mutableStateOf("") }
+    val searchBy = remember { mutableStateOf(EmptySearchBy) }
     val filterByParty = remember { mutableStateOf(EmptyFilterByParty) }
 
     Column {
@@ -196,10 +196,10 @@ fun SearchView(searchBy: MutableState<String>) {
             )
         },
         trailingIcon = {
-            if (searchBy.value != "") {
+            if (searchBy.value != EmptySearchBy) {
                 IconButton(
                     onClick = {
-                        searchBy.value = ""
+                        searchBy.value = EmptySearchBy
                     }
                 ) {
                     Icon(
@@ -234,7 +234,7 @@ fun ExposedDropdownMenuBox(
     filterBy: MutableState<String>
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val searchBy = remember { mutableStateOf("") }
+    val searchBy = remember { mutableStateOf(EmptySearchBy) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -283,7 +283,7 @@ fun ExposedDropdownMenuBox(
                         DropdownMenuItem(
                             onClick = {
                                 filterBy.value = item
-                                searchBy.value = item
+                                searchBy.value = EmptySearchBy
                                 expanded.value = false
                             },
                             content = {
@@ -302,7 +302,7 @@ fun filterCandidates(
     searchBy: String,
     filterByParty: String
 ): List<CandidateUiState> {
-    val filtered = if (searchBy.isEmpty() && filterByParty == EmptyFilterByParty) {
+    val filtered = if (searchBy == EmptySearchBy && filterByParty == EmptyFilterByParty) {
         candidates
     } else {
         candidates.filter {
