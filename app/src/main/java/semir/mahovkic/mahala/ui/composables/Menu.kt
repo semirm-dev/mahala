@@ -1,14 +1,10 @@
 package semir.mahovkic.mahala.ui.composables
 
-import android.graphics.drawable.shapes.OvalShape
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.TextField
@@ -25,23 +21,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import semir.mahovkic.mahala.ui.candidate.EmptySearchBy
+
+const val MenuEmptySearchBy = ""
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownMenuView(
     items: List<String>,
     filterBy: MutableState<String>,
+    searchablePlaceholder: String = "",
     searchable: Boolean = false
 ) {
     val expanded = remember { mutableStateOf(false) }
-    val searchBy = remember { mutableStateOf(EmptySearchBy) }
+    val searchBy = remember { mutableStateOf(MenuEmptySearchBy) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -84,7 +80,7 @@ fun DropdownMenuView(
                     ) {
 
                         if (searchable) {
-                            SearchView(searchBy)
+                            SearchView(searchBy, searchablePlaceholder)
                         }
 
                         items.forEach { item ->
@@ -99,7 +95,7 @@ fun DropdownMenuView(
                             DropdownMenuItem(
                                 onClick = {
                                     filterBy.value = item
-                                    searchBy.value = EmptySearchBy
+                                    searchBy.value = MenuEmptySearchBy
                                     expanded.value = false
                                 },
                                 content = {

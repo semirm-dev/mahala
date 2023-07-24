@@ -29,13 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import semir.mahovkic.mahala.ui.composables.ProfileImage
 import semir.mahovkic.mahala.ui.Screens
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
+import semir.mahovkic.mahala.ui.composables.EmptySearchBy
+import semir.mahovkic.mahala.ui.composables.ProfileImage
 import semir.mahovkic.mahala.ui.composables.SearchView
 
-const val EmptySearchBy = ""
+
+const val SearchByPlaceholder = "Search by name or number"
+const val MenuSearchByPlaceholder = "Search by party"
 const val EmptyFilterByParty = "All parties"
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -53,7 +57,7 @@ fun CandidatesScreen(
     val filterByParty = remember { mutableStateOf(EmptyFilterByParty) }
 
     Column {
-        SearchView(searchBy)
+        SearchView(searchBy, SearchByPlaceholder)
 
         PartiesFilter(partiesUiState, filterByParty)
 
@@ -159,7 +163,7 @@ fun CandidateCard(
 fun PartiesFilter(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
     val parties = mutableListOf(EmptyFilterByParty)
     parties.addAll(partiesUiState.parties.map { it.name })
-    DropdownMenuView(parties, filterByParty, true)
+    DropdownMenuView(parties, filterByParty, MenuSearchByPlaceholder, true)
 }
 
 fun filterCandidates(

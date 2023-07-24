@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -19,16 +20,17 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import semir.mahovkic.mahala.ui.candidate.EmptySearchBy
 
+const val EmptySearchBy = ""
 
 @Composable
-fun SearchView(searchBy: MutableState<String>) {
+fun SearchView(searchBy: MutableState<String>, placeholder: String) {
     TextField(
         value = searchBy.value,
         onValueChange = { value ->
             searchBy.value = value
         },
+        placeholder = { Text(text = placeholder, color = Color.LightGray) },
         modifier = Modifier.fillMaxWidth(),
         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
         leadingIcon = {
