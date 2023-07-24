@@ -106,8 +106,7 @@ fun CandidateDetails(
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(all = 4.dp)
+            modifier = Modifier.padding(all = 4.dp)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
