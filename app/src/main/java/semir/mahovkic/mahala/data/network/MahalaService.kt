@@ -13,22 +13,23 @@ import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import javax.inject.Inject
 
-class MahalaService @Inject constructor() : VotesApi, PartiesApi {
-    private val _api = getClient().create(MahalaApi::class.java)
+class MahalaService @Inject constructor(
+    private val api: MahalaApi
+) : VotesApi, PartiesApi {
 
     override suspend fun getCandidates(): List<Candidate> {
-        return _api.getCandidates().map { response -> response.toCandidate() }
+        return api.getCandidates().map { response -> response.toCandidate() }
     }
 
     override suspend fun getCandidateDetails(candidateId: String): CandidateDetails {
-        return _api.getCandidateDetails(candidateId).toCandidateDetails()
+        return api.getCandidateDetails(candidateId).toCandidateDetails()
     }
 
     override suspend fun vote(candidateId: String, voterId: String): String =
-        _api.vote(SendVoteDto(candidateId, voterId)).message
+        api.vote(SendVoteDto(candidateId, voterId)).message
 
     override suspend fun getParties(): List<Party> {
-        return _api.getParties().map { response -> response.toParty() }
+        return api.getParties().map { response -> response.toParty() }
     }
 }
 

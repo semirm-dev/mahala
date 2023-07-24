@@ -8,17 +8,24 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import semir.mahovkic.mahala.data.PartiesApi
 import semir.mahovkic.mahala.data.VotesApi
+import semir.mahovkic.mahala.data.network.MahalaApi
 import semir.mahovkic.mahala.data.network.MahalaService
+import semir.mahovkic.mahala.data.network.getClient
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class MainModule {
 
-    @Provides
-    fun providesVotesApi(): VotesApi = MahalaService()
+    private val _api = getClient().create(MahalaApi::class.java)
 
     @Provides
-    fun providesPartiesApi(): PartiesApi = MahalaService()
+    @Singleton
+    fun providesVotesApi(): VotesApi = MahalaService(_api)
+
+    @Provides
+    @Singleton
+    fun providesPartiesApi(): PartiesApi = MahalaService(_api)
 
     @Provides
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO

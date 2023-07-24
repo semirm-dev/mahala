@@ -78,7 +78,6 @@ fun DropdownMenuView(
                         expanded = expanded.value,
                         onDismissRequest = { expanded.value = false }
                     ) {
-
                         if (searchable) {
                             SearchView(searchBy, searchablePlaceholder)
                         }
