@@ -1,7 +1,7 @@
 ## Local voting system
 
 ### TODO
-[ ] - Offline mode
-[ ] - Paging
-[ ] - Load real profile images
-[ ] - 
+- [ ] Offline mode (cache)
+- [ ] Paging
+- [ ] Load real profile images
+- [ ] Voting group/type
