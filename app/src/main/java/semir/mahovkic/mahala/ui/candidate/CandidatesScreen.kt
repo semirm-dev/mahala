@@ -1,6 +1,7 @@
 package semir.mahovkic.mahala.ui.candidate
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,9 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.ProfileImage
@@ -233,6 +235,7 @@ fun ExposedDropdownMenuBox(
     filterBy: MutableState<String>
 ) {
     val expanded = remember { mutableStateOf(false) }
+    val searchBy = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -265,14 +268,23 @@ fun ExposedDropdownMenuBox(
                     )
                 )
 
-                ExposedDropdownMenu(
+                DropdownMenu(
                     expanded = expanded.value,
                     onDismissRequest = { expanded.value = false }
                 ) {
+                    SearchView(searchBy)
+
                     items.forEach { item ->
+                        if (searchBy.value.isNotEmpty() &&
+                            !item.lowercase().contains(searchBy.value.lowercase())
+                        ) {
+                            return@forEach
+                        }
+
                         DropdownMenuItem(
                             onClick = {
                                 filterBy.value = item
+                                searchBy.value = item
                                 expanded.value = false
                             },
                             content = {
@@ -295,8 +307,8 @@ fun filterCandidates(
         candidates
     } else {
         candidates.filter {
-            (if (partyFilter == EmptyParty) true else it.party == partyFilter) &&
-                    (it.name.lowercase().contains(filterBy) ||
+            (if (partyFilter == EmptyParty) true else it.party.lowercase() == partyFilter.lowercase()) &&
+                    (it.name.lowercase().contains(filterBy.lowercase()) ||
                             it.votingNumber.toString().contains(filterBy))
         }
     }
