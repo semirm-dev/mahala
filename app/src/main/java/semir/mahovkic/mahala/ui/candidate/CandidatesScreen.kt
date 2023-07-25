@@ -1,23 +1,15 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -25,15 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.Screens
-import semir.mahovkic.mahala.ui.composables.CandidateInfo
+import semir.mahovkic.mahala.ui.composables.CandidateCard
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptySearchBy
-import semir.mahovkic.mahala.ui.composables.ProfileImage
 import semir.mahovkic.mahala.ui.composables.SearchView
 
 
@@ -86,40 +76,19 @@ fun CandidatesList(
 
     LazyColumn {
         items(filtered, key = { it.id }) { candidate ->
-            CandidateCard(candidate) {
+            CandidateCard(
+                candidate.profileImg,
+                100.dp,
+                candidate.name,
+                candidate.votingNumber,
+                candidate.party,
+                candidate.gender,
+                20.dp
+            ) {
                 onCandidateClick(candidate.id)
             }
             Spacer(modifier = Modifier.height(10.dp))
         }
-    }
-}
-
-@Composable
-fun CandidateCard(
-    candidate: CandidateUiState,
-    onCandidateClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .padding(all = 8.dp)
-            .fillMaxWidth()
-            .clickable {
-                onCandidateClick()
-            }
-    ) {
-        ProfileImage(candidate.profileImg, candidate.gender, 100.dp)
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        CandidateInfo(
-            candidate.name,
-            candidate.votingNumber,
-            candidate.party,
-            20.dp,
-            Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterVertically)
-        )
     }
 }
 

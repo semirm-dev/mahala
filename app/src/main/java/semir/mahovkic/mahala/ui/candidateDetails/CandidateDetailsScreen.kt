@@ -35,8 +35,7 @@ import androidx.navigation.NavController
 import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
-import semir.mahovkic.mahala.ui.composables.CandidateInfo
-import semir.mahovkic.mahala.ui.composables.ProfileImage
+import semir.mahovkic.mahala.ui.composables.CandidateCard
 
 @Composable
 fun CandidateDetailsScreen(
@@ -97,7 +96,15 @@ fun CandidateDetails(
     Column(
         modifier = Modifier.padding(4.dp)
     ) {
-        CandidateCard(candidateDetails)
+        CandidateCard(
+            candidateDetails.profileImg,
+            130.dp,
+            candidateDetails.name,
+            candidateDetails.votingNumber,
+            candidateDetails.party,
+            candidateDetails.gender,
+            45.dp
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -108,31 +115,6 @@ fun CandidateDetails(
         ScanID(voterId, onScanClick)
 
         VoteButton(voterId, onVoteClick)
-    }
-}
-
-@Composable
-fun CandidateCard(
-    candidateDetails: CandidateDetailsUiState,
-) {
-    Row(
-        modifier = Modifier
-            .padding(all = 8.dp)
-            .fillMaxWidth()
-    ) {
-        ProfileImage(candidateDetails.profileImg, candidateDetails.gender, 130.dp)
-
-        Spacer(modifier = Modifier.width(10.dp))
-
-        CandidateInfo(
-            candidateDetails.name,
-            candidateDetails.votingNumber,
-            candidateDetails.party,
-            45.dp,
-            Modifier
-                .fillMaxWidth()
-                .align(Alignment.CenterVertically)
-        )
     }
 }
 
