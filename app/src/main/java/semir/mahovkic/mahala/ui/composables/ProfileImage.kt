@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import semir.mahovkic.mahala.R
 
@@ -17,7 +18,7 @@ const val Male = "M"
 const val Female = "F"
 
 @Composable
-fun ProfileImage(profileImg: String?, gender: String, size: Int = 100) {
+fun ProfileImage(profileImg: String?, gender: String, size: Dp) {
     val img = if (profileImg?.isNotEmpty() == true) profileImg else ""
 
     Image(
@@ -29,7 +30,7 @@ fun ProfileImage(profileImg: String?, gender: String, size: Int = 100) {
         }) as Painter,
         contentDescription = "Candidate profile image",
         modifier = Modifier
-            .size(size.dp)
+            .size(size)
             .clip(CircleShape)
             .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
     )

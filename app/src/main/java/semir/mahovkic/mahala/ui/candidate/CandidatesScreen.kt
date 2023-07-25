@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.Screens
+import semir.mahovkic.mahala.ui.composables.CandidateInfo
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptySearchBy
 import semir.mahovkic.mahala.ui.composables.ProfileImage
@@ -106,56 +107,19 @@ fun CandidateCard(
                 onCandidateClick()
             }
     ) {
-        ProfileImage(candidate.profileImg, candidate.gender)
+        ProfileImage(candidate.profileImg, candidate.gender, 100.dp)
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Box(
-            modifier = Modifier
+        CandidateInfo(
+            candidate.name,
+            candidate.votingNumber,
+            candidate.party,
+            20.dp,
+            Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterVertically)
-        ) {
-            Surface(
-                shape = MaterialTheme.shapes.medium,
-                shadowElevation = 2.dp,
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = candidate.name,
-                        color = MaterialTheme.colorScheme.secondary,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(all = 4.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Nr: ${candidate.votingNumber}",
-                            color = MaterialTheme.colorScheme.secondary,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier
-                                .padding(all = 4.dp)
-                                .align(Alignment.BottomStart)
-                        )
-                        Text(
-                            text = candidate.party,
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .padding(all = 5.dp)
-                                .align(Alignment.BottomEnd),
-                        )
-                    }
-                }
-            }
-        }
+        )
     }
 }
 
