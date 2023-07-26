@@ -4,6 +4,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +39,8 @@ import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import semir.mahovkic.mahala.ui.composables.CandidateCard
-import semir.mahovkic.mahala.ui.composables.NumericSlideUpDown
+import semir.mahovkic.mahala.ui.composables.slideDown
+import semir.mahovkic.mahala.ui.composables.slideUp
 
 @Composable
 fun CandidateDetailsScreen(
@@ -138,9 +141,19 @@ fun VotesInfo(newVotes: Int) {
         )
 
         Box {
-            NumericSlideUpDown(oldVotes.intValue, newVotes) { animatedValue ->
+            AnimatedContent(
+                targetState = newVotes,
+                transitionSpec = {
+                    if (targetState > oldVotes.intValue) {
+                        slideUp()
+                    } else {
+                        slideDown()
+                    }.using(SizeTransform(clip = false))
+                },
+                label = ""
+            ) { value ->
                 Text(
-                    text = if (newVotes == animatedValue) "$animatedValue" else "",
+                    text = if (newVotes == value) "$value" else "",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
