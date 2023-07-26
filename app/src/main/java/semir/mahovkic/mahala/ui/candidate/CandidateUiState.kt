@@ -2,7 +2,7 @@ package semir.mahovkic.mahala.ui.candidate
 
 data class CandidatesUiState(
     val isRefreshing: Boolean = false,
-    val candidates: List<CandidateUiState> = listOf(),
+    val candidates: List<CandidateUiState> = emptyList()
 )
 
 data class CandidateUiState(
@@ -11,14 +11,20 @@ data class CandidateUiState(
     val votingNumber: Int,
     val profileImg: String?,
     val gender: String,
-    val party: PartyUiState
+    val party: PartyUiState,
+    val groups: List<GroupUiState> = emptyList()
 )
 
 data class PartiesUiState(
-    val parties: List<PartyUiState> = listOf()
+    val parties: List<PartyUiState> = emptyList()
 )
 
 data class PartyUiState(
+    val id: Int,
+    val name: String
+)
+
+data class GroupUiState(
     val id: Int,
     val name: String
 )

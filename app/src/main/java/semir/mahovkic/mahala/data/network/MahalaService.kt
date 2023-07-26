@@ -4,6 +4,7 @@ import semir.mahovkic.mahala.data.PartiesApi
 import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.model.CandidateDetails
+import semir.mahovkic.mahala.data.model.Group
 import semir.mahovkic.mahala.data.model.Party
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
@@ -38,6 +39,7 @@ fun CandidateDto.toCandidate(): Candidate = Candidate(
     profileImg = profileImg,
     gender = gender,
     party = party.toParty(),
+    groups = groups.map { Group(it.id, it.name) }
 )
 
 fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetails(
@@ -47,7 +49,8 @@ fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetail
     profileImg = profileImg,
     gender = gender,
     party = party.toParty(),
-    totalVotes = totalVotes
+    totalVotes = totalVotes,
+    groups = groups.map { Group(it.id, it.name) }
 )
 
 fun PartyDto.toParty(): Party = Party(

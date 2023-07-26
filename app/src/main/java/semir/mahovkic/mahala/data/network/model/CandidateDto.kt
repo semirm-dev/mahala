@@ -2,9 +2,10 @@ package semir.mahovkic.mahala.data.network.model
 
 data class CandidateDto(
     val id: String,
-    var name: String,
+    val name: String,
     val votingNumber: Int,
-    var profileImg: String?,
+    val profileImg: String?,
     val gender: String,
-    var party: PartyDto
+    val party: PartyDto,
+    val groups: List<GroupDto>
 )

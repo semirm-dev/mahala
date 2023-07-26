@@ -7,5 +7,6 @@ data class CandidateDetails(
     val profileImg: String?,
     val gender: String,
     val party: Party,
-    var totalVotes: Int
+    val totalVotes: Int,
+    val groups: List<Group>
 )

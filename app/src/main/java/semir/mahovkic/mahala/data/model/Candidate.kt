@@ -2,9 +2,10 @@ package semir.mahovkic.mahala.data.model
 
 data class Candidate(
     val id: String,
-    var name: String,
+    val name: String,
     val votingNumber: Int,
-    var profileImg: String?,
+    val profileImg: String?,
     val gender: String,
-    var party: Party
+    val party: Party,
+    val groups: List<Group>
 )

@@ -11,7 +11,6 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.CandidateDetails
-import semir.mahovkic.mahala.data.model.Party
 import java.util.Locale
 import javax.inject.Inject
 
@@ -77,11 +76,7 @@ fun CandidateDetails.toCandidateDetailsUiState(): CandidateDetailsUiState = Cand
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party.toUiState(),
-    totalVotes = totalVotes
-)
-
-fun Party.toUiState(): PartyUiState = PartyUiState(
-    id = id,
-    name = name
+    party = PartyUiState(party.id, party.name),
+    totalVotes = totalVotes,
+    groupUiState = groups.map { GroupUiState(it.id, it.name) }
 )

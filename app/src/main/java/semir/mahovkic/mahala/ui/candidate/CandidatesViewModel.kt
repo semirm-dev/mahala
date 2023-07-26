@@ -11,7 +11,6 @@ import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.PartiesRepository
 import semir.mahovkic.mahala.data.model.Candidate
-import semir.mahovkic.mahala.data.model.Party
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +50,7 @@ class CandidatesViewModel @Inject constructor(
             try {
                 partiesRepository.getPartiesStream().collect {
                     _partiesUiState.value = PartiesUiState(it.map { party ->
-                        party.toPartyUiState()
+                        PartyUiState(party.id, party.name)
                     })
                 }
             } catch (e: HttpException) {
@@ -67,10 +66,6 @@ fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party.toPartyUiState(),
-)
-
-fun Party.toPartyUiState(): PartyUiState = PartyUiState(
-    id = id,
-    name = name
+    party = PartyUiState(party.id, party.name),
+    groups = groups.map { GroupUiState(it.id, it.name) }
 )
