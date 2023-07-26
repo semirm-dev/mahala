@@ -130,10 +130,6 @@ fun CandidateDetails(
 fun VotesInfo(newVotes: Int) {
     val oldVotes = remember { mutableIntStateOf(newVotes) }
 
-    if (oldVotes.intValue != newVotes) {
-        oldVotes.intValue = newVotes
-    }
-
     Row(
         modifier = Modifier.wrapContentWidth()
     ) {
@@ -151,12 +147,19 @@ fun VotesInfo(newVotes: Int) {
             AnimatedContent(
                 targetState = newVotes,
                 transitionSpec = {
-                    (slideInVertically { height -> height } + fadeIn())
-                        .togetherWith(
-                            slideOutVertically { height -> -height } + fadeOut())
-                        .using(
-                            SizeTransform(clip = false)
-                        )
+                    if (targetState > oldVotes.intValue) {
+                        // slide from bottom to top
+                        val enterTransition = slideInVertically { height -> height } + fadeIn()
+                        val exitTransition = slideOutVertically { height -> -height } + fadeOut()
+
+                        enterTransition.togetherWith(exitTransition)
+                    } else {
+                        // slide from top to bottom
+                        val enterTransition = slideInVertically { height -> -height } + fadeIn()
+                        val exitTransition = slideOutVertically { height -> height } + fadeOut()
+
+                        enterTransition.togetherWith(exitTransition)
+                    }.using(SizeTransform(clip = false))
                 },
                 label = ""
             ) { value ->
@@ -169,6 +172,10 @@ fun VotesInfo(newVotes: Int) {
                 )
             }
         }
+    }
+
+    if (oldVotes.intValue != newVotes) {
+        oldVotes.intValue = newVotes
     }
 }
 
