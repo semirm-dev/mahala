@@ -4,14 +4,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +37,7 @@ import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import semir.mahovkic.mahala.ui.composables.CandidateCard
+import semir.mahovkic.mahala.ui.composables.NumericSlideUpDown
 
 @Composable
 fun CandidateDetailsScreen(
@@ -255,41 +248,4 @@ fun handleScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
         ResultStatus.EXCEPTION -> {}
         else -> {}
     }
-}
-
-@Composable
-fun <T : Number> NumericSlideUpDown(
-    oldValue: T,
-    newValue: T,
-    draw: @Composable (animatedValue: T) -> Unit
-) {
-    AnimatedContent(
-        targetState = newValue,
-        transitionSpec = {
-            if (targetState.toFloat() > oldValue.toFloat()) {
-                slideUp()
-            } else {
-                slideDown()
-            }.using(SizeTransform(clip = false))
-        },
-        label = ""
-    ) { value ->
-        draw(value)
-    }
-}
-
-fun slideUp(): ContentTransform {
-    // slide from bottom to top
-    val enterTransition = slideInVertically { height -> height } + fadeIn()
-    val exitTransition = slideOutVertically { height -> -height } + fadeOut()
-
-    return enterTransition.togetherWith(exitTransition)
-}
-
-fun slideDown(): ContentTransform {
-    // slide from top to bottom
-    val enterTransition = slideInVertically { height -> -height } + fadeIn()
-    val exitTransition = slideOutVertically { height -> height } + fadeOut()
-
-    return enterTransition.togetherWith(exitTransition)
 }
