@@ -11,7 +11,7 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
 import semir.mahovkic.mahala.data.model.CandidateDetails
-import semir.mahovkic.mahala.data.model.CandidateVote
+import semir.mahovkic.mahala.data.model.Party
 import java.util.Locale
 import javax.inject.Inject
 
@@ -41,15 +41,10 @@ class CandidateDetailsViewModel @Inject constructor(
         }
     }
 
-    fun vote(candidateId: String, voterId: String) {
+    fun vote(voterId: String, candidateId: String, groupId: Int) {
         viewModelScope.launch {
             try {
-                if (!validVoter(voterId)) {
-                    setVoteMessage("Invalid ID!")
-                    return@launch
-                }
-
-                candidatesRepository.vote(candidateId, voterId)
+                candidatesRepository.vote(voterId, candidateId, groupId)
                 setVoteMessage("Your voting ticket has been sent successfully.")
 
                 loadCandidateDetails(candidateId)
@@ -74,10 +69,6 @@ class CandidateDetailsViewModel @Inject constructor(
     fun resetVoteUiState() {
         _voteUiState.value = VoteDetailsUiState()
     }
-
-    private fun validVoter(voterId: String): Boolean {
-        return voterId.length == 9
-    }
 }
 
 fun CandidateDetails.toCandidateDetailsUiState(): CandidateDetailsUiState = CandidateDetailsUiState(
@@ -86,11 +77,11 @@ fun CandidateDetails.toCandidateDetailsUiState(): CandidateDetailsUiState = Cand
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party,
-    votes = votes?.map { v -> v.toCandidateVoteUiState() }
+    party = party.toUiState(),
+    totalVotes = totalVotes
 )
 
-
-fun CandidateVote.toCandidateVoteUiState(): CandidateVoteUiState = CandidateVoteUiState(
-    voterId = voterId
+fun Party.toUiState(): PartyUiState = PartyUiState(
+    id = id,
+    name = name
 )

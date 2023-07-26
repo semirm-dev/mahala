@@ -6,10 +6,6 @@ data class CandidateDetailsDto(
     val votingNumber: Int,
     var profileImg: String?,
     val gender: String,
-    var party: String,
-    var votes: List<CandidateVoteDto>? = listOf()
-)
-
-data class CandidateVoteDto(
-    val voterID: String,
+    var party: PartyDto,
+    var totalVotes: Int
 )

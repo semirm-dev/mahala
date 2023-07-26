@@ -67,9 +67,10 @@ fun Candidate.toCandidateUiState(): CandidateUiState = CandidateUiState(
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party,
+    party = party.toPartyUiState(),
 )
 
 fun Party.toPartyUiState(): PartyUiState = PartyUiState(
+    id = id,
     name = name
 )

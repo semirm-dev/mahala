@@ -81,7 +81,7 @@ fun CandidatesList(
                 100.dp,
                 candidate.name,
                 candidate.votingNumber,
-                candidate.party,
+                candidate.party.name,
                 candidate.gender,
                 20.dp
             ) {
@@ -109,7 +109,7 @@ fun filterCandidates(
     } else {
         candidates.filter {
             (if (filterByParty == EmptyFilterByParty) true
-            else it.party.lowercase() == filterByParty.lowercase()) &&
+            else it.party.name.lowercase() == filterByParty.lowercase()) &&
                     (it.name.lowercase().contains(searchBy.lowercase()) ||
                             it.votingNumber.toString().contains(searchBy))
         }

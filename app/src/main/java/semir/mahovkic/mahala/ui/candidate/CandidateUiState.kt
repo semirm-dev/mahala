@@ -11,7 +11,7 @@ data class CandidateUiState(
     val votingNumber: Int,
     val profileImg: String?,
     val gender: String,
-    val party: String
+    val party: PartyUiState
 )
 
 data class PartiesUiState(
@@ -19,5 +19,6 @@ data class PartiesUiState(
 )
 
 data class PartyUiState(
+    val id: Int,
     val name: String
 )

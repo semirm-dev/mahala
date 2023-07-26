@@ -14,6 +14,6 @@ class CandidatesRepository @Inject constructor(
     suspend fun getCandidateDetails(candidateId: String): CandidateDetails =
         votesRemoteDataSource.getCandidateDetails(candidateId)
 
-    suspend fun vote(candidateId: String, voterId: String) =
-        votesRemoteDataSource.vote(candidateId, voterId)
+    suspend fun vote(voterId: String, candidateId: String, groupId: Int) =
+        votesRemoteDataSource.vote(voterId, candidateId, groupId)
 }

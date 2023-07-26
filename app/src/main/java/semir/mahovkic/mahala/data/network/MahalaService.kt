@@ -4,11 +4,9 @@ import semir.mahovkic.mahala.data.PartiesApi
 import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.model.CandidateDetails
-import semir.mahovkic.mahala.data.model.CandidateVote
 import semir.mahovkic.mahala.data.model.Party
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
-import semir.mahovkic.mahala.data.network.model.CandidateVoteDto
 import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import javax.inject.Inject
@@ -25,8 +23,8 @@ class MahalaService @Inject constructor(
         return api.getCandidateDetails(candidateId).toCandidateDetails()
     }
 
-    override suspend fun vote(candidateId: String, voterId: String): String =
-        api.vote(SendVoteDto(candidateId, voterId)).message
+    override suspend fun vote(voterId: String, candidateId: String, groupId: Int): String =
+        api.vote(SendVoteDto(voterId, candidateId, groupId)).message
 
     override suspend fun getParties(): List<Party> {
         return api.getParties().map { response -> response.toParty() }
@@ -39,7 +37,7 @@ fun CandidateDto.toCandidate(): Candidate = Candidate(
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party,
+    party = party.toParty(),
 )
 
 fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetails(
@@ -48,14 +46,11 @@ fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetail
     votingNumber = votingNumber,
     profileImg = profileImg,
     gender = gender,
-    party = party,
-    votes = votes?.map { it.toCandidateVote() }
-)
-
-fun CandidateVoteDto.toCandidateVote(): CandidateVote = CandidateVote(
-    voterId = voterID,
+    party = party.toParty(),
+    totalVotes = totalVotes
 )
 
 fun PartyDto.toParty(): Party = Party(
+    id = id,
     name = name
 )

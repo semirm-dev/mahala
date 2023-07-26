@@ -28,14 +28,14 @@ class VotesRemoteDataSource @Inject constructor(
             votesApi.getCandidateDetails(candidateId)
         }
 
-    suspend fun vote(candidateId: String, voterId: String) =
+    suspend fun vote(voterId: String, candidateId: String, groupId: Int) =
         withContext(ioDispatcher) {
-            votesApi.vote(candidateId, voterId)
+            votesApi.vote(voterId, candidateId, groupId)
         }
 }
 
 interface VotesApi {
     suspend fun getCandidates(): List<Candidate>
     suspend fun getCandidateDetails(candidateId: String): CandidateDetails
-    suspend fun vote(candidateId: String, voterId: String): String
+    suspend fun vote(voterId: String, candidateId: String, groupId: Int): String
 }

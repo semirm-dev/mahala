@@ -6,12 +6,13 @@ data class CandidateDetailsUiState(
     val votingNumber: Int = 0,
     val profileImg: String? = "",
     val gender: String = "",
-    val party: String = "",
-    var votes: List<CandidateVoteUiState>? = listOf()
+    val party: PartyUiState = PartyUiState(),
+    var totalVotes: Int = 0
 )
 
-data class CandidateVoteUiState(
-    val voterId: String
+data class PartyUiState(
+    val id: Int = 0,
+    val name: String = ""
 )
 
 data class VoteDetailsUiState(
