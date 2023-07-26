@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -144,27 +145,9 @@ fun VotesInfo(newVotes: Int) {
         )
 
         Box {
-            AnimatedContent(
-                targetState = newVotes,
-                transitionSpec = {
-                    if (targetState > oldVotes.intValue) {
-                        // slide from bottom to top
-                        val enterTransition = slideInVertically { height -> height } + fadeIn()
-                        val exitTransition = slideOutVertically { height -> -height } + fadeOut()
-
-                        enterTransition.togetherWith(exitTransition)
-                    } else {
-                        // slide from top to bottom
-                        val enterTransition = slideInVertically { height -> -height } + fadeIn()
-                        val exitTransition = slideOutVertically { height -> height } + fadeOut()
-
-                        enterTransition.togetherWith(exitTransition)
-                    }.using(SizeTransform(clip = false))
-                },
-                label = ""
-            ) { value ->
+            NumericSlideUpDown(oldVotes.intValue, newVotes) { animatedValue ->
                 Text(
-                    text = if (newVotes == value) "$value" else "",
+                    text = if (newVotes == animatedValue) "$animatedValue" else "",
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
@@ -272,4 +255,41 @@ fun handleScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
         ResultStatus.EXCEPTION -> {}
         else -> {}
     }
+}
+
+@Composable
+fun <T : Number> NumericSlideUpDown(
+    oldValue: T,
+    newValue: T,
+    draw: @Composable (animatedValue: T) -> Unit
+) {
+    AnimatedContent(
+        targetState = newValue,
+        transitionSpec = {
+            if (targetState.toFloat() > oldValue.toFloat()) {
+                slideUp()
+            } else {
+                slideDown()
+            }.using(SizeTransform(clip = false))
+        },
+        label = ""
+    ) { value ->
+        draw(value)
+    }
+}
+
+fun slideUp(): ContentTransform {
+    // slide from bottom to top
+    val enterTransition = slideInVertically { height -> height } + fadeIn()
+    val exitTransition = slideOutVertically { height -> -height } + fadeOut()
+
+    return enterTransition.togetherWith(exitTransition)
+}
+
+fun slideDown(): ContentTransform {
+    // slide from top to bottom
+    val enterTransition = slideInVertically { height -> -height } + fadeIn()
+    val exitTransition = slideOutVertically { height -> height } + fadeOut()
+
+    return enterTransition.togetherWith(exitTransition)
 }
