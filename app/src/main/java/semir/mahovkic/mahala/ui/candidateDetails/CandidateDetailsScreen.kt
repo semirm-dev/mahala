@@ -4,6 +4,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -119,14 +127,59 @@ fun CandidateDetails(
 }
 
 @Composable
-fun VotesInfo(votes: Int) {
-    Text(
-        text = "Total votes: $votes",
-        color = MaterialTheme.colorScheme.secondary,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(all = 4.dp)
-    )
+fun VotesInfo(newVotes: Int) {
+    val oldVotes = remember { mutableIntStateOf(newVotes) }
+
+    if (oldVotes.intValue != newVotes) {
+        oldVotes.intValue = newVotes
+    }
+
+    Row(
+        modifier = Modifier.wrapContentWidth()
+    ) {
+        Text(
+            text = "Total votes: ",
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(all = 4.dp)
+                .align(Alignment.CenterVertically)
+        )
+
+        Box {
+            AnimatedContent(
+                targetState = newVotes,
+                transitionSpec = {
+                    // Compare the incoming number with the previous number.
+                    if (targetState > oldVotes.intValue) {
+                        // If the target number is larger, it slides up and fades in
+                        // while the initial (smaller) number slides up and fades out.
+                        (slideInVertically { height -> height } + fadeIn()).togetherWith(
+                            slideOutVertically { height -> -height } + fadeOut())
+                    } else {
+                        // If the target number is smaller, it slides down and fades in
+                        // while the initial number slides down and fades out.
+                        (slideInVertically { height -> -height } + fadeIn()).togetherWith(
+                            slideOutVertically { height -> height } + fadeOut())
+                    }.using(
+                        // Disable clipping since the faded slide-in/out should
+                        // be displayed out of bounds.
+                        SizeTransform(clip = false)
+                    )
+                },
+                label = ""
+            ) { value ->
+                Text(
+                    text = if (newVotes == value) "$value" else "",
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(all = 4.dp)
+                )
+            }
+        }
+    }
 }
 
 @Composable
