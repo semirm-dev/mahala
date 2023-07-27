@@ -3,8 +3,10 @@ package semir.mahovkic.mahala.ui.composables
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
@@ -25,14 +27,14 @@ const val EmptySearchBy = ""
 
 @Composable
 fun SearchView(searchBy: MutableState<String>, placeholder: String) {
-    TextField(
+    OutlinedTextField(
         value = searchBy.value,
         onValueChange = { value ->
             searchBy.value = value
         },
         placeholder = { Text(text = placeholder, color = Color.LightGray) },
-        modifier = Modifier.fillMaxWidth(),
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        textStyle = TextStyle(color = Color.DarkGray, fontSize = 18.sp),
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -60,16 +62,16 @@ fun SearchView(searchBy: MutableState<String>, placeholder: String) {
             }
         },
         singleLine = true,
-        shape = RectangleShape,
+        shape = RoundedCornerShape(30.dp),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
-            cursorColor = Color.White,
-            leadingIconColor = Color.White,
-            trailingIconColor = Color.White,
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            textColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            leadingIconColor = MaterialTheme.colorScheme.primary,
+            trailingIconColor = MaterialTheme.colorScheme.primary,
+            backgroundColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            disabledIndicatorColor = MaterialTheme.colorScheme.primary
         )
     )
 }
