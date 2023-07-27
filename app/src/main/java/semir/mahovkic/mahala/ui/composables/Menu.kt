@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.TextField
@@ -26,6 +27,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import semir.mahovkic.mahala.ui.theme.LightPurple
+import semir.mahovkic.mahala.ui.theme.Purple80
 
 const val MenuEmptySearchBy = ""
 const val MenuSearchByPlaceholder = "Search by party"
@@ -40,9 +43,9 @@ fun <T> DropdownMenuView(
     modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
     searchable: Boolean = false,
-    shape: Shape = MaterialTheme.shapes.extraLarge,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = Color.White,
+    shape: Shape = RoundedCornerShape(8.dp),
+    backgroundColor: Color = LightPurple,
+    textColor: Color = Color.DarkGray,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val searchBy = remember { mutableStateOf(MenuEmptySearchBy) }
@@ -78,7 +81,10 @@ fun <T> DropdownMenuView(
                             .menuAnchor()
                             .width(170.dp),
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = backgroundColor
+                            backgroundColor = backgroundColor,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            disabledIndicatorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
