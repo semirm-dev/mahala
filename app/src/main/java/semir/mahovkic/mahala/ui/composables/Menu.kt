@@ -15,12 +15,14 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,12 +34,15 @@ const val EmptyFilterByGroup = "All levels"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T>DropdownMenuView(
+fun <T> DropdownMenuView(
     items: List<DropDownMenuItem<T>>,
     selectedItem: MutableState<DropDownMenuItem<T>>,
     modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
     searchable: Boolean = false,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = Color.White,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val searchBy = remember { mutableStateOf(MenuEmptySearchBy) }
@@ -51,7 +56,7 @@ fun <T>DropdownMenuView(
                 .fillMaxWidth()
         ) {
             Surface(
-                shape = MaterialTheme.shapes.extraLarge,
+                shape = shape,
                 shadowElevation = 2.dp,
                 modifier = modifier,
             ) {
@@ -65,7 +70,7 @@ fun <T>DropdownMenuView(
                         value = selectedItem.value.value,
                         onValueChange = {},
                         readOnly = true,
-                        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+                        textStyle = TextStyle(color = textColor, fontSize = 18.sp),
                         trailingIcon = {
                             ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value)
                         },
@@ -73,7 +78,7 @@ fun <T>DropdownMenuView(
                             .menuAnchor()
                             .width(170.dp),
                         colors = TextFieldDefaults.textFieldColors(
-                            backgroundColor = MaterialTheme.colorScheme.primary
+                            backgroundColor = backgroundColor
                         )
                     )
 
