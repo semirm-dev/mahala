@@ -39,6 +39,9 @@ import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import semir.mahovkic.mahala.ui.composables.CandidateCard
+import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
+import semir.mahovkic.mahala.ui.composables.DropdownMenuView
+import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
 import semir.mahovkic.mahala.ui.composables.slideDown
 import semir.mahovkic.mahala.ui.composables.slideUp
 
@@ -46,11 +49,19 @@ import semir.mahovkic.mahala.ui.composables.slideUp
 fun CandidateDetailsScreen(
     navController: NavController,
     candidateId: String,
+    groupId: Int,
     viewModel: CandidateDetailsViewModel
 ) {
     val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
     val voterId = remember { mutableStateOf("") }
+    val groupItem = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByGroup)) }
+
+    if (groupId != 0) {
+        uiState.groupUiState.find { it.id == groupId }?.let {
+            groupItem.value = DropDownMenuItem(it.id, it.name)
+        }
+    }
 
     viewModel.loadCandidateDetails(candidateId)
 
@@ -79,14 +90,14 @@ fun CandidateDetailsScreen(
             }
         }
 
-    CandidateDetails(candidateDetails = uiState, voterId, {
+    CandidateDetails(uiState, voterId, groupItem, {
         try {
             idScanLauncher.launch()
         } catch (e: Exception) {
             Log.e("SCAN", e.toString())
         }
     }, {
-        viewModel.vote(voterId.value, uiState.id, uiState.groupUiState.first().id)
+        viewModel.vote(voterId.value, uiState.id, groupItem.value.id)
         voterId.value = ""
     })
 }
@@ -95,9 +106,12 @@ fun CandidateDetailsScreen(
 fun CandidateDetails(
     candidateDetails: CandidateDetailsUiState,
     voterId: MutableState<String>,
+    groupItem: MutableState<DropDownMenuItem<Int>>,
     onScanClick: () -> Unit,
     onVoteClick: () -> Unit,
 ) {
+
+
     Column(
         modifier = Modifier.padding(4.dp)
     ) {
@@ -115,11 +129,13 @@ fun CandidateDetails(
 
         VotesInfo(candidateDetails.totalVotes)
 
+        GroupsFilter(candidateDetails.groupUiState, groupItem)
+
         Spacer(modifier = Modifier.height(20.dp))
 
         ScanID(voterId, onScanClick)
 
-        VoteButton(voterId, onVoteClick)
+        VoteButton(voterId, groupItem.value, onVoteClick)
     }
 }
 
@@ -215,6 +231,7 @@ fun ScanID(
 @Composable
 fun VoteButton(
     voterId: MutableState<String>,
+    groupItem: DropDownMenuItem<Int>,
     onVoteClick: () -> Unit,
 ) {
     Box(
@@ -225,7 +242,7 @@ fun VoteButton(
         Button(
             onClick = onVoteClick,
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            enabled = voterId.value.trim().isNotEmpty(),
+            enabled = voterId.value.trim().isNotEmpty() && groupItem.id > 0,
             modifier = Modifier.align(Alignment.Center)
         ) {
             Text(
@@ -236,6 +253,17 @@ fun VoteButton(
             )
         }
     }
+}
+
+@Composable
+fun GroupsFilter(
+    groups: List<GroupUiState>,
+    groupItem: MutableState<DropDownMenuItem<Int>>,
+    modifier: Modifier = Modifier
+) {
+    val groupsFilter = mutableListOf(DropDownMenuItem(0, EmptyFilterByGroup))
+    groupsFilter.addAll(groups.map { DropDownMenuItem(it.id, it.name) })
+    DropdownMenuView(groupsFilter, groupItem, modifier)
 }
 
 @Composable

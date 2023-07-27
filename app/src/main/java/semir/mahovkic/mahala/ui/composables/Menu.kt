@@ -29,9 +29,9 @@ const val MenuEmptySearchBy = ""
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownMenuView(
-    items: List<String>,
-    filterBy: MutableState<String>,
+fun <T>DropdownMenuView(
+    items: List<DropDownMenuItem<T>>,
+    selectedItem: MutableState<DropDownMenuItem<T>>,
     modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
     searchable: Boolean = false,
@@ -59,7 +59,7 @@ fun DropdownMenuView(
                     },
                 ) {
                     TextField(
-                        value = filterBy.value,
+                        value = selectedItem.value.value,
                         onValueChange = {},
                         readOnly = true,
                         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
@@ -85,7 +85,7 @@ fun DropdownMenuView(
                         items.forEach { item ->
                             if (searchable) {
                                 if (searchBy.value.isNotEmpty() &&
-                                    !item.lowercase().contains(searchBy.value.lowercase())
+                                    !item.value.lowercase().contains(searchBy.value.lowercase())
                                 ) {
                                     return@forEach
                                 }
@@ -93,12 +93,12 @@ fun DropdownMenuView(
 
                             DropdownMenuItem(
                                 onClick = {
-                                    filterBy.value = item
+                                    selectedItem.value = item
                                     searchBy.value = MenuEmptySearchBy
                                     expanded.value = false
                                 },
                                 content = {
-                                    Text(text = item)
+                                    Text(text = item.value)
                                 },
                             )
                         }
@@ -108,3 +108,8 @@ fun DropdownMenuView(
         }
     }
 }
+
+data class DropDownMenuItem<T>(
+    val id: T,
+    val value: String
+)

@@ -27,12 +27,16 @@ fun NavGraph(
             CandidatesScreen(navController, candidatesViewModel)
         }
         composable(
-            "${Screens.CandidateDetails.route}/{candidateId}",
-            arguments = listOf(navArgument("candidateId") { type = NavType.StringType })
+            "${Screens.CandidateDetails.route}/{candidateId}/{groupId}",
+            arguments = listOf(
+                navArgument("candidateId") { type = NavType.StringType },
+                navArgument("groupId") { type = NavType.IntType },
+            )
         ) {
             CandidateDetailsScreen(
                 navController,
                 it.arguments?.getString("candidateId") ?: "",
+                it.arguments?.getInt("groupId") ?: 0,
                 candidateDetailsViewModel
             )
         }

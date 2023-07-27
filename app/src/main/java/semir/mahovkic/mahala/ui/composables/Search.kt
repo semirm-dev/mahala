@@ -24,6 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 const val EmptySearchBy = ""
+const val SearchByPlaceholder = "Search by name or number"
+const val MenuSearchByPlaceholder = "Search by party"
+const val EmptyFilterByParty = "All parties"
+const val EmptyFilterByGroup = "All groups"
 
 @Composable
 fun SearchView(searchBy: MutableState<String>, placeholder: String) {

@@ -23,15 +23,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import semir.mahovkic.mahala.ui.Screens
 import semir.mahovkic.mahala.ui.composables.CandidateCard
+import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
+import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
+import semir.mahovkic.mahala.ui.composables.EmptyFilterByParty
 import semir.mahovkic.mahala.ui.composables.EmptySearchBy
+import semir.mahovkic.mahala.ui.composables.MenuSearchByPlaceholder
+import semir.mahovkic.mahala.ui.composables.SearchByPlaceholder
 import semir.mahovkic.mahala.ui.composables.SearchView
-
-
-const val SearchByPlaceholder = "Search by name or number"
-const val MenuSearchByPlaceholder = "Search by party"
-const val EmptyFilterByParty = "All parties"
-const val EmptyFilterByGroup = "All groups"
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -47,8 +46,8 @@ fun CandidatesScreen(
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
 
     val searchBy = remember { mutableStateOf(EmptySearchBy) }
-    val filterByParty = remember { mutableStateOf(EmptyFilterByParty) }
-    val filterByGroup = remember { mutableStateOf(EmptyFilterByGroup) }
+    val filterByParty = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByParty)) }
+    val filterByGroup = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByGroup)) }
 
     Column {
         SearchView(searchBy, SearchByPlaceholder)
@@ -73,7 +72,7 @@ fun CandidatesScreen(
                 filterByParty.value,
                 filterByGroup.value
             ) { candidateId ->
-                navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
+                navController.navigate("${Screens.CandidateDetails.route}/${candidateId}/${filterByGroup.value.id}")
             }
             PullRefreshIndicator(
                 uiState.isRefreshing,
@@ -88,11 +87,11 @@ fun CandidatesScreen(
 fun CandidatesList(
     candidates: List<CandidateUiState>,
     searchBy: String,
-    filterByParty: String,
-    filterByGroup: String,
+    filterByParty: DropDownMenuItem<Int>,
+    filterByGroup: DropDownMenuItem<Int>,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
-    val filtered = filterCandidates(candidates, searchBy, filterByParty, filterByGroup)
+    val filtered = filterCandidates(candidates, searchBy, filterByParty.value, filterByGroup.value)
 
     LazyColumn {
         items(filtered, key = { it.id }) { candidate ->
@@ -115,23 +114,23 @@ fun CandidatesList(
 @Composable
 fun PartiesFilter(
     parties: List<PartyUiState>,
-    filterByParty: MutableState<String>,
+    filterByParty: MutableState<DropDownMenuItem<Int>>,
     modifier: Modifier = Modifier
 ) {
-    val partiesFilter = mutableListOf(EmptyFilterByParty)
-    partiesFilter.addAll(parties.map { it.name })
+    val partiesFilter = mutableListOf(DropDownMenuItem(0, EmptyFilterByParty))
+    partiesFilter.addAll(parties.map { DropDownMenuItem(it.id, it.name) })
     DropdownMenuView(partiesFilter, filterByParty, modifier, MenuSearchByPlaceholder, true)
 }
 
 @Composable
 fun GroupsFilter(
     groups: List<GroupUiState>,
-    filterByParty: MutableState<String>,
+    filterByGroup: MutableState<DropDownMenuItem<Int>>,
     modifier: Modifier = Modifier
 ) {
-    val groupsFilter = mutableListOf(EmptyFilterByGroup)
-    groupsFilter.addAll(groups.map { it.name })
-    DropdownMenuView(groupsFilter, filterByParty, modifier)
+    val groupsFilter = mutableListOf(DropDownMenuItem(0, EmptyFilterByGroup))
+    groupsFilter.addAll(groups.map { DropDownMenuItem(it.id, it.name) })
+    DropdownMenuView(groupsFilter, filterByGroup, modifier)
 }
 
 fun filterCandidates(
