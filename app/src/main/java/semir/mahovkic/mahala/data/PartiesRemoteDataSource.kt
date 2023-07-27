@@ -9,20 +9,16 @@ import semir.mahovkic.mahala.data.model.Party
 import javax.inject.Inject
 
 class PartiesRemoteDataSource @Inject constructor(
-    private val partiesApi: PartiesApi,
+    private val api: VotingApi,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _parties = mutableListOf<Party>()
 
     suspend fun getPartiesStream(): Flow<List<Party>> =
         withContext(ioDispatcher) {
-            val resp = partiesApi.getParties()
+            val resp = api.getParties()
             _parties.clear()
             _parties.addAll(resp)
             MutableStateFlow(_parties)
         }
-}
-
-interface PartiesApi {
-    suspend fun getParties(): List<Party>
 }

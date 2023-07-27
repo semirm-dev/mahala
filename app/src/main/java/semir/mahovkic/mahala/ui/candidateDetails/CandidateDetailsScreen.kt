@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -113,9 +114,21 @@ fun CandidateDetails(
     onScanClick: () -> Unit,
     onVoteClick: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.padding(4.dp)
-    ) {
+    Column {
+        TopAppBar {
+            Column (
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                androidx.compose.material.Text(
+                    "Mahala voting",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+        }
+
         CandidateCard(
             candidateDetails.profileImg,
             130.dp,
@@ -162,7 +175,7 @@ fun VotesInfo(newVotes: Int, modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(all = 4.dp)
+                .padding(all = 8.dp)
                 .align(Alignment.CenterVertically)
         )
 

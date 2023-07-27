@@ -1,8 +1,6 @@
 package semir.mahovkic.mahala.data.network
 
-import semir.mahovkic.mahala.data.GroupsApi
-import semir.mahovkic.mahala.data.PartiesApi
-import semir.mahovkic.mahala.data.VotesApi
+import semir.mahovkic.mahala.data.VotingApi
 import semir.mahovkic.mahala.data.model.Candidate
 import semir.mahovkic.mahala.data.model.CandidateDetails
 import semir.mahovkic.mahala.data.model.Group
@@ -16,7 +14,7 @@ import javax.inject.Inject
 
 class MahalaService @Inject constructor(
     private val api: MahalaApi
-) : VotesApi, PartiesApi, GroupsApi {
+) : VotingApi {
 
     override suspend fun getCandidates(): List<Candidate> {
         return api.getCandidates().map { response -> response.toCandidate() }

@@ -10,14 +10,14 @@ import semir.mahovkic.mahala.data.model.CandidateDetails
 import javax.inject.Inject
 
 class VotesRemoteDataSource @Inject constructor(
-    private val votesApi: VotesApi,
+    private val api: VotingApi,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _candidates = mutableListOf<Candidate>()
 
     suspend fun getCandidatesStream(): Flow<List<Candidate>> =
         withContext(ioDispatcher) {
-            val resp = votesApi.getCandidates()
+            val resp = api.getCandidates()
             _candidates.clear()
             _candidates.addAll(resp)
             MutableStateFlow(_candidates)
@@ -25,17 +25,11 @@ class VotesRemoteDataSource @Inject constructor(
 
     suspend fun getCandidateDetails(candidateId: String): CandidateDetails =
         withContext(ioDispatcher) {
-            votesApi.getCandidateDetails(candidateId)
+            api.getCandidateDetails(candidateId)
         }
 
     suspend fun vote(voterId: String, candidateId: String, groupId: Int) =
         withContext(ioDispatcher) {
-            votesApi.vote(voterId, candidateId, groupId)
+            api.vote(voterId, candidateId, groupId)
         }
-}
-
-interface VotesApi {
-    suspend fun getCandidates(): List<Candidate>
-    suspend fun getCandidateDetails(candidateId: String): CandidateDetails
-    suspend fun vote(voterId: String, candidateId: String, groupId: Int): String
 }

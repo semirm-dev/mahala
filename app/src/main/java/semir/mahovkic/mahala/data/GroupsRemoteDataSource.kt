@@ -9,20 +9,16 @@ import semir.mahovkic.mahala.data.model.Group
 import javax.inject.Inject
 
 class GroupsRemoteDataSource @Inject constructor(
-    private val groupsApi: GroupsApi,
+    private val api: VotingApi,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     private val _groups = mutableListOf<Group>()
 
     suspend fun getGroupsStream(): Flow<List<Group>> =
         withContext(ioDispatcher) {
-            val resp = groupsApi.getGroups()
+            val resp = api.getGroups()
             _groups.clear()
             _groups.addAll(resp)
             MutableStateFlow(_groups)
         }
-}
-
-interface GroupsApi {
-    suspend fun getGroups(): List<Group>
 }
