@@ -56,8 +56,9 @@ fun CandidateDetailsScreen(
     val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
     val voterId = remember { mutableStateOf("") }
     val groupItem = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByGroup)) }
+    val hasVoted = remember { mutableStateOf(false) }
 
-    if (groupId != 0) {
+    if (groupId != 0 && !hasVoted.value) {
         uiState.groupUiState.find { it.id == groupId }?.let {
             groupItem.value = DropDownMenuItem(it.id, it.name)
         }
@@ -99,6 +100,8 @@ fun CandidateDetailsScreen(
     }, {
         viewModel.vote(voterId.value, uiState.id, groupItem.value.id)
         voterId.value = ""
+        hasVoted.value = true
+        groupItem.value = DropDownMenuItem(0, EmptyFilterByGroup)
     })
 }
 
