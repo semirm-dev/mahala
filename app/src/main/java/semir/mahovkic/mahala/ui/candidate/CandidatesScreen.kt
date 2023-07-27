@@ -39,7 +39,7 @@ fun CandidatesScreen(
     viewModel: CandidatesViewModel
 ) {
     val uiState: CandidatesUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val partiesUiState: PartiesUiState by viewModel.partyUiState.collectAsStateWithLifecycle()
+    val voteDetailsUiState: VoteDetailsUiState by viewModel.voteDetailsUiState.collectAsStateWithLifecycle()
 
     val pullRefreshState =
         rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
@@ -50,7 +50,7 @@ fun CandidatesScreen(
     Column {
         SearchView(searchBy, SearchByPlaceholder)
 
-        PartiesFilter(partiesUiState, filterByParty)
+        PartiesFilter(voteDetailsUiState.parties, filterByParty)
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
             CandidatesList(uiState.candidates, searchBy.value, filterByParty.value) { candidateId ->
@@ -93,10 +93,10 @@ fun CandidatesList(
 }
 
 @Composable
-fun PartiesFilter(partiesUiState: PartiesUiState, filterByParty: MutableState<String>) {
-    val parties = mutableListOf(EmptyFilterByParty)
-    parties.addAll(partiesUiState.parties.map { it.name })
-    DropdownMenuView(parties, filterByParty, MenuSearchByPlaceholder, true)
+fun PartiesFilter(parties: List<PartyUiState>, filterByParty: MutableState<String>) {
+    val partiesFilter = mutableListOf(EmptyFilterByParty)
+    partiesFilter.addAll(parties.map { it.name })
+    DropdownMenuView(partiesFilter, filterByParty, MenuSearchByPlaceholder, true)
 }
 
 fun filterCandidates(

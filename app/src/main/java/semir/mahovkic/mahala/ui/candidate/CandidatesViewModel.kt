@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import semir.mahovkic.mahala.data.CandidatesRepository
+import semir.mahovkic.mahala.data.GroupsRepository
 import semir.mahovkic.mahala.data.PartiesRepository
 import semir.mahovkic.mahala.data.model.Candidate
 import javax.inject.Inject
@@ -17,17 +20,18 @@ import javax.inject.Inject
 class CandidatesViewModel @Inject constructor(
     private val candidatesRepository: CandidatesRepository,
     private val partiesRepository: PartiesRepository,
+    private val groupsRepository: GroupsRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CandidatesUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _partiesUiState = MutableStateFlow(PartiesUiState())
-    val partyUiState = _partiesUiState.asStateFlow()
+    private val _voteDetailsUiState = MutableStateFlow(VoteDetailsUiState())
+    val voteDetailsUiState = _voteDetailsUiState.asStateFlow()
 
     init {
         loadCandidates()
-        loadParties()
+        loadVotingDetails()
     }
 
     fun loadCandidates() {
@@ -45,13 +49,18 @@ class CandidatesViewModel @Inject constructor(
         }
     }
 
-    private fun loadParties() {
+    private fun loadVotingDetails() {
         viewModelScope.launch {
             try {
-                partiesRepository.getPartiesStream().collect {
-                    _partiesUiState.value = PartiesUiState(it.map { party ->
-                        PartyUiState(party.id, party.name)
-                    })
+                val partiesResponse = async { partiesRepository.getPartiesStream() }
+                val groupsResponse = async { groupsRepository.getGroupsStream() }
+
+                combine(partiesResponse.await(), groupsResponse.await()) { p, g ->
+                    VoteDetailsUiState(
+                        p.map { PartyUiState(it.id, it.name) },
+                        g.map { GroupUiState(it.id, it.name) })
+                }.collect {
+                    _voteDetailsUiState.value = it
                 }
             } catch (e: HttpException) {
                 Log.e("VOTE", "loadCandidates failed: ${e.response()?.message()}")

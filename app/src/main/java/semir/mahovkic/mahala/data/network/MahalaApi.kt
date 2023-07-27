@@ -6,6 +6,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
+import semir.mahovkic.mahala.data.network.model.GroupDto
 import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import semir.mahovkic.mahala.data.network.model.VoteResponseDto
@@ -22,4 +23,7 @@ interface MahalaApi {
 
     @GET("parties")
     suspend fun getParties(): List<PartyDto>
+
+    @GET("groups")
+    suspend fun getGroups(): List<GroupDto>
 }

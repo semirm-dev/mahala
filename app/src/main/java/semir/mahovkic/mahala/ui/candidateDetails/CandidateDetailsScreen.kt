@@ -51,7 +51,6 @@ fun CandidateDetailsScreen(
     val uiState: CandidateDetailsUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val voteUiState: VoteDetailsUiState by viewModel.voteUiState.collectAsStateWithLifecycle()
     val voterId = remember { mutableStateOf("") }
-    val groupId = 1
 
     viewModel.loadCandidateDetails(candidateId)
 
@@ -87,7 +86,7 @@ fun CandidateDetailsScreen(
             Log.e("SCAN", e.toString())
         }
     }, {
-        viewModel.vote(voterId.value, uiState.id, groupId)
+        viewModel.vote(voterId.value, uiState.id, uiState.groupUiState.first().id)
         voterId.value = ""
     })
 }

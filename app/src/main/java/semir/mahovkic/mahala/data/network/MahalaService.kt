@@ -1,5 +1,6 @@
 package semir.mahovkic.mahala.data.network
 
+import semir.mahovkic.mahala.data.GroupsApi
 import semir.mahovkic.mahala.data.PartiesApi
 import semir.mahovkic.mahala.data.VotesApi
 import semir.mahovkic.mahala.data.model.Candidate
@@ -8,13 +9,14 @@ import semir.mahovkic.mahala.data.model.Group
 import semir.mahovkic.mahala.data.model.Party
 import semir.mahovkic.mahala.data.network.model.CandidateDetailsDto
 import semir.mahovkic.mahala.data.network.model.CandidateDto
+import semir.mahovkic.mahala.data.network.model.GroupDto
 import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import javax.inject.Inject
 
 class MahalaService @Inject constructor(
     private val api: MahalaApi
-) : VotesApi, PartiesApi {
+) : VotesApi, PartiesApi, GroupsApi {
 
     override suspend fun getCandidates(): List<Candidate> {
         return api.getCandidates().map { response -> response.toCandidate() }
@@ -29,6 +31,10 @@ class MahalaService @Inject constructor(
 
     override suspend fun getParties(): List<Party> {
         return api.getParties().map { response -> response.toParty() }
+    }
+
+    override suspend fun getGroups(): List<Group> {
+        return api.getGroups().map { response -> response.toGroup() }
     }
 }
 
@@ -54,6 +60,11 @@ fun CandidateDetailsDto.toCandidateDetails(): CandidateDetails = CandidateDetail
 )
 
 fun PartyDto.toParty(): Party = Party(
+    id = id,
+    name = name
+)
+
+fun GroupDto.toGroup(): Group = Group(
     id = id,
     name = name
 )

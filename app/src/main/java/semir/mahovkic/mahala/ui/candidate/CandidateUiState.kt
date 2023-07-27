@@ -15,8 +15,9 @@ data class CandidateUiState(
     val groups: List<GroupUiState> = emptyList()
 )
 
-data class PartiesUiState(
-    val parties: List<PartyUiState> = emptyList()
+data class VoteDetailsUiState(
+    val parties: List<PartyUiState> = emptyList(),
+    val groups: List<GroupUiState> = emptyList()
 )
 
 data class PartyUiState(
