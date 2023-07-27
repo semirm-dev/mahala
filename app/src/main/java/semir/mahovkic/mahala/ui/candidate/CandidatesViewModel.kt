@@ -30,8 +30,8 @@ class CandidatesViewModel @Inject constructor(
     val voteDetailsUiState = _voteDetailsUiState.asStateFlow()
 
     init {
-        loadCandidates()
         loadVotingDetails()
+        loadCandidates()
     }
 
     fun loadCandidates() {
@@ -49,7 +49,7 @@ class CandidatesViewModel @Inject constructor(
         }
     }
 
-    private fun loadVotingDetails() {
+    fun loadVotingDetails() {
         viewModelScope.launch {
             try {
                 val partiesResponse = async { partiesRepository.getPartiesStream() }

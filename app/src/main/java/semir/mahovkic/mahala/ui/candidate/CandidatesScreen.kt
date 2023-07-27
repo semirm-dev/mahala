@@ -43,7 +43,10 @@ fun CandidatesScreen(
     val voteDetailsUiState: VoteDetailsUiState by viewModel.voteDetailsUiState.collectAsStateWithLifecycle()
 
     val pullRefreshState =
-        rememberPullRefreshState(uiState.isRefreshing, { viewModel.loadCandidates() })
+        rememberPullRefreshState(uiState.isRefreshing, {
+            viewModel.loadVotingDetails()
+            viewModel.loadCandidates()
+        })
 
     val searchBy = remember { mutableStateOf(EmptySearchBy) }
     val filterByParty = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByParty)) }
