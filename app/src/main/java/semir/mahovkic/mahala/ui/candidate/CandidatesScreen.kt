@@ -53,20 +53,20 @@ fun CandidatesScreen(
     val filterByGroup = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByGroup)) }
 
     Column {
-        SearchView(searchBy, SearchByPlaceholder)
-
         Box(
             modifier = Modifier.fillMaxWidth()
         ) {
             GroupsFilter(
                 voteDetailsUiState.groups, filterByGroup, modifier = Modifier
-                    .align(Alignment.BottomStart)
+                    .align(Alignment.CenterStart)
             )
             PartiesFilter(
                 voteDetailsUiState.parties, filterByParty, modifier = Modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.CenterEnd)
             )
         }
+
+        SearchView(searchBy, SearchByPlaceholder)
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
             CandidatesList(

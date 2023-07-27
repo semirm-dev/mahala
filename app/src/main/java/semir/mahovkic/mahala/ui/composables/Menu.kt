@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 const val MenuEmptySearchBy = ""
+const val MenuSearchByPlaceholder = "Search by party"
+const val EmptyFilterByParty = "All parties"
+const val EmptyFilterByGroup = "All levels"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -96,7 +96,7 @@ fun CandidateInfo(name: String, votingNumber: Int, party: String, height: Dp, mo
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier
                             .padding(all = 4.dp)
-                            .align(Alignment.BottomStart)
+                            .align(Alignment.CenterStart)
                     )
                     Text(
                         text = party,
@@ -105,7 +105,7 @@ fun CandidateInfo(name: String, votingNumber: Int, party: String, height: Dp, mo
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(all = 5.dp)
-                            .align(Alignment.BottomEnd),
+                            .align(Alignment.CenterEnd),
                     )
                 }
             }

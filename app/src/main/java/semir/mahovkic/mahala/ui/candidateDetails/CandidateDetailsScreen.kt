@@ -113,8 +113,6 @@ fun CandidateDetails(
     onScanClick: () -> Unit,
     onVoteClick: () -> Unit,
 ) {
-
-
     Column(
         modifier = Modifier.padding(4.dp)
     ) {
@@ -130,9 +128,11 @@ fun CandidateDetails(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        VotesInfo(candidateDetails.totalVotes)
+        Box {
+            VotesInfo(candidateDetails.totalVotes, modifier = Modifier.align(Alignment.CenterStart))
 
-        GroupsFilter(candidateDetails.groupUiState, groupItem)
+            GroupsFilter(candidateDetails.groupUiState, groupItem, modifier = Modifier.align(Alignment.CenterEnd))
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -143,11 +143,11 @@ fun CandidateDetails(
 }
 
 @Composable
-fun VotesInfo(newVotes: Int) {
+fun VotesInfo(newVotes: Int, modifier: Modifier = Modifier) {
     val oldVotes = remember { mutableIntStateOf(newVotes) }
 
     Row(
-        modifier = Modifier.wrapContentWidth()
+        modifier = modifier.wrapContentWidth()
     ) {
         Text(
             text = "Total votes: ",
