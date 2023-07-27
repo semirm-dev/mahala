@@ -3,6 +3,7 @@ package semir.mahovkic.mahala.ui.candidate
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,6 +31,7 @@ import semir.mahovkic.mahala.ui.composables.SearchView
 const val SearchByPlaceholder = "Search by name or number"
 const val MenuSearchByPlaceholder = "Search by party"
 const val EmptyFilterByParty = "All parties"
+const val EmptyFilterByGroup = "All groups"
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -46,14 +48,31 @@ fun CandidatesScreen(
 
     val searchBy = remember { mutableStateOf(EmptySearchBy) }
     val filterByParty = remember { mutableStateOf(EmptyFilterByParty) }
+    val filterByGroup = remember { mutableStateOf(EmptyFilterByGroup) }
 
     Column {
         SearchView(searchBy, SearchByPlaceholder)
 
-        PartiesFilter(voteDetailsUiState.parties, filterByParty)
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            GroupsFilter(
+                voteDetailsUiState.groups, filterByGroup, modifier = Modifier
+                    .align(Alignment.BottomStart)
+            )
+            PartiesFilter(
+                voteDetailsUiState.parties, filterByParty, modifier = Modifier
+                    .align(Alignment.BottomEnd)
+            )
+        }
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
-            CandidatesList(uiState.candidates, searchBy.value, filterByParty.value) { candidateId ->
+            CandidatesList(
+                uiState.candidates,
+                searchBy.value,
+                filterByParty.value,
+                filterByGroup.value
+            ) { candidateId ->
                 navController.navigate("${Screens.CandidateDetails.route}/${candidateId}")
             }
             PullRefreshIndicator(
@@ -70,9 +89,10 @@ fun CandidatesList(
     candidates: List<CandidateUiState>,
     searchBy: String,
     filterByParty: String,
+    filterByGroup: String,
     onCandidateClick: (candidateId: String) -> Unit
 ) {
-    val filtered = filterCandidates(candidates, searchBy, filterByParty)
+    val filtered = filterCandidates(candidates, searchBy, filterByParty, filterByGroup)
 
     LazyColumn {
         items(filtered, key = { it.id }) { candidate ->
@@ -93,27 +113,55 @@ fun CandidatesList(
 }
 
 @Composable
-fun PartiesFilter(parties: List<PartyUiState>, filterByParty: MutableState<String>) {
+fun PartiesFilter(
+    parties: List<PartyUiState>,
+    filterByParty: MutableState<String>,
+    modifier: Modifier = Modifier
+) {
     val partiesFilter = mutableListOf(EmptyFilterByParty)
     partiesFilter.addAll(parties.map { it.name })
-    DropdownMenuView(partiesFilter, filterByParty, MenuSearchByPlaceholder, true)
+    DropdownMenuView(partiesFilter, filterByParty, modifier, MenuSearchByPlaceholder, true)
+}
+
+@Composable
+fun GroupsFilter(
+    groups: List<GroupUiState>,
+    filterByParty: MutableState<String>,
+    modifier: Modifier = Modifier
+) {
+    val groupsFilter = mutableListOf(EmptyFilterByGroup)
+    groupsFilter.addAll(groups.map { it.name })
+    DropdownMenuView(groupsFilter, filterByParty, modifier)
 }
 
 fun filterCandidates(
     candidates: List<CandidateUiState>,
     searchBy: String,
-    filterByParty: String
+    filterByParty: String,
+    filterByGroup: String
 ): List<CandidateUiState> {
-    val filtered = if (searchBy == EmptySearchBy && filterByParty == EmptyFilterByParty) {
-        candidates
-    } else {
-        candidates.filter {
-            (if (filterByParty == EmptyFilterByParty) true
-            else it.party.name.lowercase() == filterByParty.lowercase()) &&
-                    (it.name.lowercase().contains(searchBy.lowercase()) ||
-                            it.votingNumber.toString().contains(searchBy))
+    val filtered =
+        if (searchBy == EmptySearchBy &&
+            filterByParty == EmptyFilterByParty &&
+            filterByGroup == EmptyFilterByGroup
+        ) {
+            candidates
+        } else {
+            candidates.filter {
+                (it.name.lowercase().contains(searchBy.lowercase()) ||
+                        it.votingNumber.toString().contains(searchBy))
+
+                        &&
+
+                        (if (filterByParty == EmptyFilterByParty) true
+                        else it.party.name.lowercase() == filterByParty.lowercase())
+
+                        &&
+
+                        (if (filterByGroup == EmptyFilterByGroup) true
+                        else it.groups.map { g -> g.name }.contains(filterByGroup))
+            }
         }
-    }
 
     return filtered
 }

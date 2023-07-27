@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -33,8 +32,9 @@ const val MenuEmptySearchBy = ""
 fun DropdownMenuView(
     items: List<String>,
     filterBy: MutableState<String>,
+    modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
-    searchable: Boolean = false
+    searchable: Boolean = false,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val searchBy = remember { mutableStateOf(MenuEmptySearchBy) }
@@ -50,7 +50,7 @@ fun DropdownMenuView(
             Surface(
                 shape = MaterialTheme.shapes.extraLarge,
                 shadowElevation = 2.dp,
-                modifier = Modifier.align(Alignment.BottomEnd),
+                modifier = modifier,
             ) {
                 ExposedDropdownMenuBox(
                     expanded = expanded.value,
@@ -105,7 +105,6 @@ fun DropdownMenuView(
                     }
                 }
             }
-
         }
     }
 }
