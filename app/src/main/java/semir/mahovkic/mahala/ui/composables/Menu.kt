@@ -16,7 +16,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +27,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import semir.mahovkic.mahala.ui.theme.LightPurple
-import semir.mahovkic.mahala.ui.theme.Purple80
 
 const val MenuEmptySearchBy = ""
 const val MenuSearchByPlaceholder = "Search by party"
@@ -45,7 +43,7 @@ fun <T> DropdownMenuView(
     searchable: Boolean = false,
     shape: Shape = RoundedCornerShape(5.dp),
     backgroundColor: Color = LightPurple,
-    textColor: Color = Color.DarkGray,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
 ) {
     val expanded = remember { mutableStateOf(false) }
     val searchBy = remember { mutableStateOf(MenuEmptySearchBy) }

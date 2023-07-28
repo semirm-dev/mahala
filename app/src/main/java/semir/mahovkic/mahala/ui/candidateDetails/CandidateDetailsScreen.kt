@@ -33,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +45,7 @@ import semir.mahovkic.mahala.ui.composables.CandidateCard
 import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
+import semir.mahovkic.mahala.ui.composables.TopBar
 import semir.mahovkic.mahala.ui.composables.rememberAddAPhoto
 import semir.mahovkic.mahala.ui.composables.slideDown
 import semir.mahovkic.mahala.ui.composables.slideUp
@@ -119,19 +119,7 @@ fun CandidateDetails(
     onVoteClick: () -> Unit,
 ) {
     Column {
-        TopAppBar {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                androidx.compose.material.Text(
-                    "Mahala voting",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-            }
-        }
+        TopBar()
 
         CandidateCard(
             candidateDetails.profileImg,
@@ -228,7 +216,7 @@ fun ScanID(
             placeholder = {
                 Text(
                     text = "Your ID number",
-                    color = Color.LightGray,
+                    color = MaterialTheme.colorScheme.outline,
                     style = MaterialTheme.typography.titleLarge
                 )
             },
@@ -274,7 +262,7 @@ fun VoteButton(
         ) {
             Text(
                 text = "Vote",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
