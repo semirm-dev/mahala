@@ -153,7 +153,7 @@ fun CandidateDetails(
     onVoteClick: () -> Unit,
 ) {
     Column {
-        TopBar()
+        TopBar("${candidateDetails.votingNumber} - ${candidateDetails.name}")
 
         CandidateCard(
             candidateDetails.profileImg,

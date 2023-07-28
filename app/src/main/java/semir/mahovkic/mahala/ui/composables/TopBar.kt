@@ -13,37 +13,54 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import semir.mahovkic.mahala.ui.theme.Purple40
-import semir.mahovkic.mahala.ui.theme.Purple80
+import semir.mahovkic.mahala.ui.theme.TopBarLight
+import semir.mahovkic.mahala.ui.theme.TopBarLighter
 
 @Composable
-fun TopBar() {
+fun TopBar(text: String, animated: Boolean = false) {
     TopAppBar(
         backgroundColor = MaterialTheme.colorScheme.primary,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            InfinitelyPulsingHeart(
-                Purple80,
-                Purple40,
-                targetSize = 1f,
-                scaleDuration = 2000,
-                colorDuration = 2000
-            ) { scale, color ->
-                Box(Modifier.fillMaxSize()) {
-                    Text(
-                        "Mahala voting",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = color,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .align(Alignment.Center)
-                            .graphicsLayer(
-                                scaleX = scale,
-                                scaleY = scale
+            when (animated) {
+                true -> {
+                    InfinitelyPulsingHeart(
+                        TopBarLighter,
+                        TopBarLight,
+                        targetSize = 1.1f,
+                        scaleDuration = 1800,
+                        colorDuration = 2800
+                    ) { scale, color ->
+                        Box(Modifier.fillMaxSize()) {
+                            Text(
+                                text,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = color,
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .align(Alignment.Center)
+                                    .graphicsLayer(
+                                        scaleX = scale,
+                                        scaleY = scale
+                                    )
                             )
-                    )
+                        }
+                    }
+                }
+
+                false -> {
+                    Box(Modifier.fillMaxSize()) {
+                        Text(
+                            text,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .align(Alignment.Center)
+                        )
+                    }
                 }
             }
         }

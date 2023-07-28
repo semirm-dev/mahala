@@ -59,7 +59,7 @@ fun InfinitelyPulsingHeart(
             // start again from the [initialValue] defined above.
             // This is the default [RepeatMode]. See [RepeatMode.Reverse] below for an
             // alternative.
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Reverse
         ),
         label = ""
     )

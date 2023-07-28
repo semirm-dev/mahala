@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -27,8 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -44,8 +41,6 @@ import semir.mahovkic.mahala.ui.composables.MenuSearchByPlaceholder
 import semir.mahovkic.mahala.ui.composables.SearchByPlaceholder
 import semir.mahovkic.mahala.ui.composables.SearchView
 import semir.mahovkic.mahala.ui.composables.TopBar
-import semir.mahovkic.mahala.ui.theme.Purple40
-import semir.mahovkic.mahala.ui.theme.Purple80
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -68,7 +63,7 @@ fun CandidatesScreen(
     val filterByGroup = remember { mutableStateOf(DropDownMenuItem(0, EmptyFilterByGroup)) }
 
     Column {
-        TopBar()
+        TopBar("Choose wisely!", animated = true)
 
         Box(
             modifier = Modifier.fillMaxWidth()
