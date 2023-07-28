@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -40,7 +39,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.microblink.blinkid.activity.result.OneSideScanResult
 import com.microblink.blinkid.activity.result.ResultStatus
+import com.microblink.blinkid.activity.result.TwoSideScanResult
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
+import com.microblink.blinkid.activity.result.contract.TwoSideDocumentScan
 import semir.mahovkic.mahala.ui.composables.CandidateCard
 import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
@@ -75,9 +76,9 @@ fun CandidateDetailsScreen(
         viewModel.resetVoteUiState()
     }
 
-    val idScanLauncher =
+    val frontScanLauncher =
         rememberLauncherForActivityResult(OneSideDocumentScan()) { scanResult: OneSideScanResult ->
-            handleScanResult(scanResult) {
+            handleFrontScanResult(scanResult) {
                 scanResult.result?.let { r ->
                     r.documentNumber?.value()?.let {
                         voterId.value = it
@@ -96,9 +97,35 @@ fun CandidateDetailsScreen(
             }
         }
 
+    val twoSideScanLauncher =
+        rememberLauncherForActivityResult(TwoSideDocumentScan()) { scanResult: TwoSideScanResult ->
+            handleTwoSideScanResult(scanResult) {
+                scanResult.result?.let { r ->
+                    r.documentNumber?.value()?.let {
+
+                    }
+
+                    r.personalIdNumber?.value()?.let {
+                        voterId.value = it
+                    }
+
+                    r.isExpired.let { expired ->
+                        if (expired) {
+                            r.dateOfExpiry?.let {
+                                viewModel.setVoteMessage(
+                                    "id ${voterId.value} expired: ${it.date}"
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     CandidateDetails(uiState, voterId, groupItem, {
         try {
-            idScanLauncher.launch()
+            frontScanLauncher.launch()
+//            twoSideScanLauncher.launch()
         } catch (e: Exception) {
             Log.e("SCAN", e.toString())
         }
@@ -294,7 +321,19 @@ fun DisplayVoteMessage(message: String, callback: () -> Unit) {
     }
 }
 
-fun handleScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
+fun handleFrontScanResult(scanResult: OneSideScanResult, onFinished: () -> Unit) {
+    when (scanResult.resultStatus) {
+        ResultStatus.FINISHED -> {
+            onFinished()
+        }
+
+        ResultStatus.CANCELLED -> {}
+        ResultStatus.EXCEPTION -> {}
+        else -> {}
+    }
+}
+
+fun handleTwoSideScanResult(scanResult: TwoSideScanResult, onFinished: () -> Unit) {
     when (scanResult.resultStatus) {
         ResultStatus.FINISHED -> {
             onFinished()
