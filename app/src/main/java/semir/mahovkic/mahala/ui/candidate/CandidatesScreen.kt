@@ -1,29 +1,15 @@
 package semir.mahovkic.mahala.ui.candidate
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -36,8 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -200,55 +184,4 @@ fun filterCandidates(
         }
 
     return filtered
-}
-
-@Composable
-fun InfinitelyPulsingHeart() {
-    // Creates an [InfiniteTransition] instance for managing child animations.
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    // Creates a child animation of float type as a part of the [InfiniteTransition].
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 3f,
-        targetValue = 6f,
-        animationSpec = infiniteRepeatable(
-            // Infinitely repeating a 1000ms tween animation using default easing curve.
-            animation = tween(1000),
-            // After each iteration of the animation (i.e. every 1000ms), the animation will
-            // start again from the [initialValue] defined above.
-            // This is the default [RepeatMode]. See [RepeatMode.Reverse] below for an
-            // alternative.
-            repeatMode = RepeatMode.Restart
-        ),
-        label = ""
-    )
-
-    // Creates a Color animation as a part of the [InfiniteTransition].
-    val color by infiniteTransition.animateColor(
-        initialValue = Color.Red,
-        targetValue = Color(0xff800000), // Dark Red
-        animationSpec = infiniteRepeatable(
-            // Linearly interpolate between initialValue and targetValue every 1000ms.
-            animation = tween(1000, easing = LinearEasing),
-            // Once [TargetValue] is reached, starts the next iteration in reverse (i.e. from
-            // TargetValue to InitialValue). Then again from InitialValue to TargetValue. This
-            // [RepeatMode] ensures that the animation value is *always continuous*.
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
-    )
-
-    Box(Modifier.fillMaxSize()) {
-        Icon(
-            Icons.Filled.Favorite,
-            contentDescription = null,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale
-                ),
-            tint = color
-        )
-    }
 }
