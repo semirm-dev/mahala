@@ -1,5 +1,6 @@
 package semir.mahovkic.mahala.ui.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,7 +42,7 @@ fun <T> DropdownMenuView(
     modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
     searchable: Boolean = false,
-    shape: Shape = RoundedCornerShape(5.dp),
+    shape: Shape = RoundedCornerShape(50.dp),
     backgroundColor: Color = LightPurple,
     textColor: Color = MaterialTheme.colorScheme.onBackground,
 ) {
@@ -58,8 +59,9 @@ fun <T> DropdownMenuView(
         ) {
             Surface(
                 shape = shape,
-                shadowElevation = 2.dp,
+                shadowElevation = 0.dp,
                 modifier = modifier,
+                border = BorderStroke(0.3.dp, MaterialTheme.colorScheme.primary)
             ) {
                 ExposedDropdownMenuBox(
                     expanded = expanded.value,
@@ -80,9 +82,9 @@ fun <T> DropdownMenuView(
                             .width(170.dp),
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = backgroundColor,
-                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                            disabledIndicatorColor = MaterialTheme.colorScheme.primary
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
                         )
                     )
 
