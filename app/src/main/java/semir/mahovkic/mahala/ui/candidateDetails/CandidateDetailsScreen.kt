@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,6 +53,7 @@ import semir.mahovkic.mahala.ui.composables.CandidateCard
 import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
+import semir.mahovkic.mahala.ui.composables.InfinitelyPulsingHeart
 import semir.mahovkic.mahala.ui.composables.TopBar
 import semir.mahovkic.mahala.ui.composables.rememberAddAPhoto
 import semir.mahovkic.mahala.ui.composables.slideDown
@@ -290,21 +292,36 @@ fun VoteButton(
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Button(
-            onClick = onVoteClick,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            enabled = voterId.value.trim().isNotEmpty() && groupItem.id > 0,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(140.dp),
-            shape = CircleShape
-        ) {
-            Text(
-                text = "Vote",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+        InfinitelyPulsingHeart(
+            initialColor = MaterialTheme.colorScheme.primary,
+            targetColor = MaterialTheme.colorScheme.primary,
+            targetSize = 1.1f,
+            scaleDuration = 600,
+            colorDuration = 1000
+        ) { scale, color ->
+
+            val enabled = voterId.value.trim().isNotEmpty() && groupItem.id > 0
+
+            Button(
+                onClick = onVoteClick,
+                colors = ButtonDefaults.buttonColors(containerColor = color),
+                enabled = enabled,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(140.dp)
+                    .graphicsLayer(
+                        scaleX = if (enabled) scale else 1f,
+                        scaleY = if (enabled) scale else 1f,
+                    ),
+                shape = CircleShape
+            ) {
+                Text(
+                    text = "Vote",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
