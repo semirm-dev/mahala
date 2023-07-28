@@ -3,12 +3,16 @@ package semir.mahovkic.mahala.ui.candidate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -21,7 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -32,10 +39,13 @@ import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
 import semir.mahovkic.mahala.ui.composables.EmptyFilterByParty
 import semir.mahovkic.mahala.ui.composables.EmptySearchBy
+import semir.mahovkic.mahala.ui.composables.InfinitelyPulsingHeart
 import semir.mahovkic.mahala.ui.composables.MenuSearchByPlaceholder
 import semir.mahovkic.mahala.ui.composables.SearchByPlaceholder
 import semir.mahovkic.mahala.ui.composables.SearchView
 import semir.mahovkic.mahala.ui.composables.TopBar
+import semir.mahovkic.mahala.ui.theme.Purple40
+import semir.mahovkic.mahala.ui.theme.Purple80
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -75,15 +85,32 @@ fun CandidatesScreen(
 
         SearchView(searchBy, SearchByPlaceholder)
 
-        Box(
-            modifier = Modifier
-                .width(20.dp)
-                .height(1.dp)
-                .align(Alignment.CenterHorizontally)
-                .background(color = MaterialTheme.colorScheme.primary)
-                .shadow(4.dp)
-        ) {
-            // animation
+
+        InfinitelyPulsingHeart(
+            MaterialTheme.colorScheme.background,
+            MaterialTheme.colorScheme.primary,
+            targetSize = 2f,
+            scaleDuration = 2000,
+            colorDuration = 2000
+        ) { _, color ->
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(2.dp)
+                            .align(Alignment.Center)
+                            .background(color = color)
+                            .shadow(4.dp)
+                    )
+                }
+            }
         }
 
         Box(Modifier.pullRefresh(pullRefreshState)) {
