@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -55,6 +56,7 @@ import semir.mahovkic.mahala.ui.composables.TopBar
 import semir.mahovkic.mahala.ui.composables.rememberAddAPhoto
 import semir.mahovkic.mahala.ui.composables.slideDown
 import semir.mahovkic.mahala.ui.composables.slideUp
+import semir.mahovkic.mahala.ui.theme.LightPurple
 
 @Composable
 fun CandidateDetailsScreen(
@@ -260,13 +262,15 @@ fun ScanID(
             onClick = onScanClick,
             shape = CircleShape,
             contentPadding = PaddingValues(18.dp),
+            border = BorderStroke(0.3.dp, MaterialTheme.colorScheme.primary),
+            colors = ButtonDefaults.outlinedButtonColors(containerColor = LightPurple),
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .size(70.dp),
         ) {
             Icon(
                 imageVector = rememberAddAPhoto(),
-                contentDescription = "",
+                contentDescription = ""
             )
         }
     }
