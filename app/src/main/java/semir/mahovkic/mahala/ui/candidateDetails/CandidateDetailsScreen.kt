@@ -1,7 +1,6 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.launch
 import androidx.compose.animation.AnimatedContent
@@ -19,6 +18,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -30,9 +33,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +45,8 @@ import com.microblink.blinkid.activity.result.ResultStatus
 import com.microblink.blinkid.activity.result.TwoSideScanResult
 import com.microblink.blinkid.activity.result.contract.OneSideDocumentScan
 import com.microblink.blinkid.activity.result.contract.TwoSideDocumentScan
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import semir.mahovkic.mahala.ui.composables.CandidateCard
 import semir.mahovkic.mahala.ui.composables.DropDownMenuItem
 import semir.mahovkic.mahala.ui.composables.DropdownMenuView
@@ -72,7 +77,7 @@ fun CandidateDetailsScreen(
 
     viewModel.loadCandidateDetails(candidateId)
 
-    DisplayVoteMessage(voteUiState.message) {
+    InfoMessage(voteUiState.message) {
         viewModel.resetVoteUiState()
     }
 
@@ -309,15 +314,28 @@ fun GroupsFilter(
 }
 
 @Composable
-fun DisplayVoteMessage(message: String, callback: () -> Unit) {
+fun InfoMessage(message: String, callback: () -> Unit) {
     if (message.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            message,
-            Toast.LENGTH_LONG
-        ).show()
+        val scaffoldState: ScaffoldState = rememberScaffoldState()
+        val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
-        callback()
+        Scaffold(
+            scaffoldState = scaffoldState,
+            modifier = Modifier.padding(18.dp)
+        ) { p ->
+            p.let {
+                coroutineScope.launch {
+                    val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = "X"
+                    )
+                    when (snackBarResult) {
+                        SnackbarResult.Dismissed -> callback()
+                        SnackbarResult.ActionPerformed -> callback()
+                    }
+                }
+            }
+        }
     }
 }
 

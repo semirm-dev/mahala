@@ -44,7 +44,7 @@ class CandidateDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 candidatesRepository.vote(voterId, candidateId, groupId)
-                setVoteMessage("Your voting ticket has been sent successfully.")
+                setVoteMessage("Your voting ticket has been successfully sent for evaluation.")
 
                 loadCandidateDetails(candidateId)
             } catch (e: HttpException) {
