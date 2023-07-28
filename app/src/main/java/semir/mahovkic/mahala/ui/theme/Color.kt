@@ -14,4 +14,7 @@ val LightBluePrimary = Color(0xFF03A9F4)
 val LightBlueSecondary = Color(0xFF64B5F6)
 val LightBlueDark = Color(0xFF01579B)
 val LightBlueBackground = Color(0xFFB3E5FC)
+
 val LightPurple = Color(0xFFEDE7F6)
+val Green = Color(0xFF4CAF50)
+val GrayGreen = Color(0xFF388E3C)

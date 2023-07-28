@@ -1,5 +1,6 @@
 package semir.mahovkic.mahala.ui.candidateDetails
 
+import android.graphics.drawable.shapes.OvalShape
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -14,8 +15,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Button
@@ -30,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +50,8 @@ import semir.mahovkic.mahala.ui.composables.DropdownMenuView
 import semir.mahovkic.mahala.ui.composables.EmptyFilterByGroup
 import semir.mahovkic.mahala.ui.composables.slideDown
 import semir.mahovkic.mahala.ui.composables.slideUp
+import semir.mahovkic.mahala.ui.theme.GrayGreen
+import semir.mahovkic.mahala.ui.theme.Green
 
 @Composable
 fun CandidateDetailsScreen(
@@ -116,7 +123,7 @@ fun CandidateDetails(
 ) {
     Column {
         TopAppBar {
-            Column (
+            Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 androidx.compose.material.Text(
@@ -266,13 +273,16 @@ fun VoteButton(
             onClick = onVoteClick,
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             enabled = voterId.value.trim().isNotEmpty() && groupItem.id > 0,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.Center)
+                .size(140.dp),
+            shape = CircleShape
         ) {
             Text(
                 text = "Vote",
                 color = Color.White,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(20.dp)
+                fontWeight = FontWeight.Bold
             )
         }
     }
