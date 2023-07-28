@@ -43,7 +43,7 @@ fun <T> DropdownMenuView(
     modifier: Modifier = Modifier,
     searchablePlaceholder: String = "",
     searchable: Boolean = false,
-    shape: Shape = RoundedCornerShape(8.dp),
+    shape: Shape = RoundedCornerShape(5.dp),
     backgroundColor: Color = LightPurple,
     textColor: Color = Color.DarkGray,
 ) {
