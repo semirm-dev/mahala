@@ -12,7 +12,7 @@ import semir.mahovkic.mahala.data.network.model.PartyDto
 import semir.mahovkic.mahala.data.network.model.SendVoteDto
 import javax.inject.Inject
 
-class MahalaService @Inject constructor(
+class MahalaVotingApi @Inject constructor(
     private val api: MahalaApi
 ) : VotingApi {
 
