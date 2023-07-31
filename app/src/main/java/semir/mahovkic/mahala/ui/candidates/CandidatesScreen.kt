@@ -1,4 +1,4 @@
-package semir.mahovkic.mahala.ui.candidate
+package semir.mahovkic.mahala.ui.candidates
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

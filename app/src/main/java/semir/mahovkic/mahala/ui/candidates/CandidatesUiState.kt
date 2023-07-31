@@ -1,4 +1,4 @@
-package semir.mahovkic.mahala.ui.candidate
+package semir.mahovkic.mahala.ui.candidates
 
 data class CandidatesUiState(
     val isRefreshing: Boolean = false,

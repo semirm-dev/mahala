@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import semir.mahovkic.mahala.ui.candidate.CandidatesScreen
-import semir.mahovkic.mahala.ui.candidate.CandidatesViewModel
+import semir.mahovkic.mahala.ui.candidates.CandidatesScreen
+import semir.mahovkic.mahala.ui.candidates.CandidatesViewModel
 import semir.mahovkic.mahala.ui.candidateDetails.CandidateDetailsScreen
 import semir.mahovkic.mahala.ui.candidateDetails.CandidateDetailsViewModel
 

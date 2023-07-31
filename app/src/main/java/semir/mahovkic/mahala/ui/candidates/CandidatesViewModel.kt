@@ -1,4 +1,4 @@
-package semir.mahovkic.mahala.ui.candidate
+package semir.mahovkic.mahala.ui.candidates
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
