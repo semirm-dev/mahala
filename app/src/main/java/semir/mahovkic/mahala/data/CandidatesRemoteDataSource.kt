@@ -12,7 +12,6 @@ class CandidatesRemoteDataSource @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-
     suspend fun getCandidatesStream(): List<Candidate> =
         withContext(ioDispatcher) {
             api.getCandidates()

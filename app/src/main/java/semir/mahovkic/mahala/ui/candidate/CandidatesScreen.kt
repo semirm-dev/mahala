@@ -80,7 +80,6 @@ fun CandidatesScreen(
 
         SearchView(searchBy, SearchByPlaceholder)
 
-
         InfinitelyPulsingHeart(
             MaterialTheme.colorScheme.background,
             MaterialTheme.colorScheme.primary,
